@@ -1,21 +1,33 @@
-import { StatusBar } from 'expo-status-bar';
-import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import React from "react";
+import { StyleSheet, SafeAreaView, Platform, StatusBar } from "react-native";
+import AppLoading from "expo-app-loading";
+import { useFonts } from "expo-font";
 
-export default function App() {
-  return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
-  );
-}
+import LoginScreen from "./app/screens/loginScreen";
+
+export default (props) => {
+  let [fontsLoaded] = useFonts({
+    nats: require("./app/assets/fonts/NATS-Regular.ttf"),
+    varela: require("./app/assets/fonts/VarelaRound-Regular.ttf"),
+  });
+
+  if (!fontsLoaded) {
+    return <AppLoading />;
+  } else {
+    return (
+      <SafeAreaView style={styles.container}>
+        <LoginScreen />
+      </SafeAreaView>
+    );
+  }
+};
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
+    backgroundColor: "#fff",
+    alignItems: "center",
+    justifyContent: "center",
+    paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
   },
 });
