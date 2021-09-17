@@ -4,6 +4,7 @@ import AppLoading from "expo-app-loading";
 import { useFonts } from "expo-font";
 
 import LoginScreen from "./app/screens/loginScreen";
+import RegisterScreen from "./app/screens/RegisterScreen";
 
 export default (props) => {
   let [fontsLoaded] = useFonts({

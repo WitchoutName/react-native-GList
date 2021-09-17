@@ -10,9 +10,9 @@ const AppButton = ({ title, ...rest }) => {
       <TouchableHighlight style={styles.touch} {...rest}>
         <View style={styles.container}>
           <LinearGradient
-            colors={["#9990CF", "#38C7C7"]}
+            colors={[Color.darkPurple, Color.blue]}
             style={styles.background}
-            start={{ x: 0, y: 0 }}
+            start={{ x: 0.5, y: 0 }}
             end={{ x: 1, y: 1 }}
           />
           <Text style={styles.text}>{title}</Text>
@@ -49,12 +49,12 @@ const styles = StyleSheet.create({
   },
   background: {
     position: "absolute",
-    left: -5,
+    left: -5.5,
     right: 0,
     top: -5,
     borderRadius: 50,
     height: 50,
-    width: "100%",
+    width: "103.75%",
   },
 });
 

@@ -8,6 +8,7 @@ export default {
   grayPlus: "rgba(42, 207, 97, 0.4)",
   checked: "#dedede",
   purple: "#9990CF",
+  darkPurple: "#796DC6",
   blue: "#38C7C7",
   inputText: "#BBBBBB",
   link: "#000AFF",

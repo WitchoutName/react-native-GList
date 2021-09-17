@@ -7,10 +7,12 @@ import Color from "../../classes/Color";
 const AppTextInput = ({ icon, hasError, ...otherProps }) => {
   return (
     <View style={{ ...styles.container, marginBottom: hasError ? 3 : 10 }}>
-      {icon ? <MaterialCommunityIcons icon={icon} /> : null}
+      {icon && (
+        <MaterialCommunityIcons name={icon} size={20} style={styles.icon} />
+      )}
       <TextInput
         style={styles.textInput}
-        placeholderTextColor="#BBBBBB"
+        placeholderTextColor={Color.inputText}
         {...otherProps}
       />
     </View>
@@ -34,6 +36,9 @@ const styles = StyleSheet.create({
     fontFamily: "varela",
     width: "70%",
     flex: 1,
+  },
+  icon: {
+    marginRight: 10,
   },
 });
 
