@@ -6,16 +6,23 @@ const tokenKey = "token";
 
 api.setAuthToken(getAuthToken);
 
+export async function register(user) {
+  const response = await api.client.put(authUrl + "get-token/", user);
+  if (response.status >= 200 && response.status < 300) {
+    await setAuthToken(response.data.token);
+  }
+  return response;
+}
+
 export async function login(email, password) {
   const response = await api.client.post(authUrl + "get-token/", {
     email,
     password,
   });
-  console.log(response.data, response.status);
   if (response.status >= 200 && response.status < 300) {
-    await setAuthToken(response.data);
+    await setAuthToken(response.data.token);
   }
-  console.log(await getAuthToken());
+  return response;
 }
 
 export function loginWithAuthToken(token) {
@@ -58,4 +65,5 @@ export default {
   logout,
   getUser,
   getAuthToken,
+  register,
 };

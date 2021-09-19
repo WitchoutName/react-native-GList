@@ -4,11 +4,7 @@ import { View, StyleSheet, Dimensions } from "react-native";
 const screenWidth = Dimensions.get("window").width;
 
 const Screen = (props) => {
-  return (
-    <View style={{ ...styles.container, width: screenWidth }}>
-      {props.children}
-    </View>
-  );
+  return <View style={{ ...styles.container }}>{props.children}</View>;
 };
 
 const styles = StyleSheet.create({
@@ -19,6 +15,7 @@ const styles = StyleSheet.create({
     paddingBottom: 0,
     height: 0,
     flexGrow: 1,
+    flex: 1,
   },
 });
 

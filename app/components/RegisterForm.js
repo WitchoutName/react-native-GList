@@ -1,9 +1,11 @@
-import React from "react";
+import React, { useState } from "react";
 import { View, StyleSheet, Pressable } from "react-native";
 import * as Yup from "yup";
 
 import SmallLink from "./common/SmallLink";
+import { ErrorMessage } from "./common/forms";
 import { AppForm, AppFormField, SubmitButton } from "./common/forms";
+import auth from "../services/authService";
 
 const validationSchema = Yup.object().shape({
   username: Yup.string().required().label("Username"),
@@ -12,7 +14,21 @@ const validationSchema = Yup.object().shape({
   password2: Yup.string().required().min(4).label("Password"),
 });
 
-const RegisterForm = ({ scrollToIndex }) => {
+const RegisterForm = ({ scrollToIndex, onAuth }) => {
+  const [error, setError] = useState("");
+
+  const handleOnSubmit = async (values) => {
+    const user = {
+      email: values.email,
+      username: values.username,
+      password: values.password1,
+    };
+    const { data, status } = await auth.register(user);
+    console.log(data, status);
+    if (data.token) onAuth();
+    else setError(data[Object.keys(data)[0]][0]);
+  };
+
   return (
     <View style={styles.form}>
       <AppForm
@@ -22,7 +38,7 @@ const RegisterForm = ({ scrollToIndex }) => {
           password2: "",
           username: "",
         }}
-        onSubmit={(values) => console.log(values)}
+        onSubmit={handleOnSubmit}
         validationSchema={validationSchema}
         style={styles.form}
       >
@@ -63,6 +79,7 @@ const RegisterForm = ({ scrollToIndex }) => {
         </Pressable>
         <Pressable>
           <SubmitButton title="Register" />
+          <ErrorMessage error={error} visible={error} />
         </Pressable>
       </AppForm>
 

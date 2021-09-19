@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useState } from "react";
 import {
   StyleSheet,
   View,
@@ -15,6 +15,7 @@ import ScreenScroll from "./app/components/common/ScreenScroll";
 import LoginScreen from "./app/screens/loginScreen";
 import ListScreen from "./app/screens/ListScreen";
 import auth from "./app/services/authService";
+import List from "./app/components/List";
 
 export default (props) => {
   let [fontsLoaded] = useFonts({
@@ -22,7 +23,22 @@ export default (props) => {
     varela: require("./app/assets/fonts/VarelaRound-Regular.ttf"),
   });
 
-  if (!fontsLoaded) {
+  const [authCheck, setAuthCheck] = useState(false);
+  const [initIndex, setInitIndex] = useState(0);
+
+  useEffect(() => {
+    auth.getAuthToken().then((r) => {
+      console.log(!!r);
+      if (r) setInitIndex(1);
+      setAuthCheck(true);
+    });
+  }, []);
+
+  // useEffect(()=>{
+
+  // }, [initIndex])
+
+  if (!fontsLoaded || !authCheck) {
     return <AppLoading />;
   } else {
     return (
@@ -34,13 +50,12 @@ export default (props) => {
               [LoginScreen, {}],
               [ListScreen, {}],
             ]}
-            initIndex={1}
+            initIndex={initIndex}
             debug={false}
             goBackOnKeyboard={true}
-            hideInactivePages
-            handle
+            hideInactivePages={false}
           />
-          {/* <LoginScreen scrollToIndex={() => {}} /> */}
+          <List />
         </View>
       </View>
     );

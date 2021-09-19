@@ -11,6 +11,7 @@ export default {
   darkPurple: "#796DC6",
   blue: "#38C7C7",
   inputText: "#BBBBBB",
+  blueText: "#598497",
   link: "#000AFF",
   white: "#FFF",
 };

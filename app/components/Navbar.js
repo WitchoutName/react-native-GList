@@ -5,19 +5,20 @@ import AppText from "./common/AppText";
 import AppButton from "./common/AppButton";
 import CircleButton from "../components/CircleButton";
 
-const Navbar = ({ onLogout, listTitle }) => {
+const Navbar = ({ onLogout, listTitle, onOpenDrawer }) => {
   return (
     <View style={styles.navbar}>
       <>
         <CircleButton
-          icon={{ name: "plus", height: 50, width: 50 }}
+          icon={{ name: "hamburger", height: 75, width: 75 }}
           style={styles.tab}
+          onPress={onOpenDrawer}
         />
         {/* <AppButton style={styles.tabb} title="Tab" />
         <AppButton style={styles.logout} onPress={onLogout} title="Logout" /> */}
         <AppText style={styles.titleb}>{listTitle}</AppText>
         <CircleButton
-          icon={{ name: "heart", height: 36, width: 36 }}
+          icon={{ name: "heart", height: 50, width: 50 }}
           style={styles.fav}
         />
       </>
@@ -35,6 +36,9 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     padding: 5,
+    borderBottomWidth: 1,
+    borderTopWidth: 1,
+    borderColor: "#ddd",
   },
   tab: {
     position: "absolute",

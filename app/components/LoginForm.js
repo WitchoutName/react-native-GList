@@ -1,8 +1,9 @@
-import React from "react";
+import React, { useState } from "react";
 import { View, StyleSheet, Button } from "react-native";
 import * as Yup from "yup";
 
 import SmallLink from "./common/SmallLink";
+import { ErrorMessage } from "./common/forms";
 import { AppForm, AppFormField, SubmitButton } from "./common/forms";
 import auth from "../services/authService";
 
@@ -12,10 +13,15 @@ const validationSchema = Yup.object().shape({
 });
 
 const LoginForm = ({ scrollToIndex, onAuth }) => {
+  const [error, setError] = useState("");
+
   const handleOnSubmit = async (values) => {
-    // await auth.login(values.email, values.password);
-    // user = await auth.getUser();
-    onAuth();
+    const { data, status } = await auth.login(values.email, values.password);
+    console.log(status);
+    if (status === 404) setError("No account with this email.");
+    else if (status === 400) setError(data);
+    else if (status >= 500) setError("Server error.");
+    else onAuth();
   };
 
   return (
@@ -42,6 +48,7 @@ const LoginForm = ({ scrollToIndex, onAuth }) => {
           name="password"
         />
         <SubmitButton title="Login" />
+        <ErrorMessage error={error} visible={error} />
       </AppForm>
       <View style={styles.links}>
         <SmallLink onPress={() => scrollToIndex(0)}>New account</SmallLink>

@@ -23,7 +23,7 @@ const LoginScreen = ({ scrollToIndex }) => {
       <LogoForm>
         <ScreenScroll
           pages={[
-            [RegisterForm, {}],
+            [RegisterForm, { onAuth: handleAuth }],
             [LoginForm, { onAuth: handleAuth }],
             [ForgottenPasswordForm, {}],
           ]}

@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="200"
+   height="200"
+   viewBox="0 0 128 128"
+   version="1.1"
+   id="svg1891"
+   inkscape:version="1.1 (c68e22c387, 2021-05-23)"
+   sodipodi:docname="hamburger.svg"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview1893"
+     pagecolor="#ffffff"
+     bordercolor="#999999"
+     borderopacity="1"
+     inkscape:pageshadow="0"
+     inkscape:pageopacity="0"
+     inkscape:pagecheckerboard="0"
+     inkscape:document-units="mm"
+     showgrid="false"
+     inkscape:zoom="1.8101934"
+     inkscape:cx="76.994186"
+     inkscape:cy="111.11312"
+     inkscape:window-width="958"
+     inkscape:window-height="1008"
+     inkscape:window-x="-7"
+     inkscape:window-y="0"
+     inkscape:window-maximized="0"
+     inkscape:current-layer="layer1" />
+  <defs
+     id="defs1888">
+    <linearGradient
+       id="logo-gradient"
+       x1="64"
+       y1="0"
+       x2="64"
+       y2="128"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="translate(118.34251,1.5329343)">
+      <stop
+         offset="20%"
+         stop-color="#9990CF"
+         id="stop4887" />
+      <stop
+         offset="100%"
+         stop-color="#38C7C7"
+         id="stop4889" />
+    </linearGradient>
+    <clipPath
+       clipPathUnits="userSpaceOnUse"
+       id="clipPath1856">
+      <g
+         id="g1864"
+         transform="translate(0,10)"
+         style="fill:#ffffff">
+        <rect
+           style="fill:#ffffff;stroke-width:0.261037"
+           id="rect1858"
+           width="110"
+           height="18"
+           y="15"
+           rx="9"
+           x="9" />
+        <rect
+           style="fill:#ffffff;stroke-width:0.261037"
+           id="rect1860"
+           width="110"
+           height="18"
+           y="45"
+           rx="9"
+           x="9" />
+        <rect
+           style="fill:#ffffff;stroke-width:0.261037"
+           id="rect1862"
+           width="110"
+           height="18"
+           y="75"
+           rx="9"
+           x="9" />
+      </g>
+    </clipPath>
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#logo-gradient"
+       id="linearGradient982"
+       x1="6.7449017"
+       y1="-156.05269"
+       x2="134.74554"
+       y2="-28.052696"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="translate(-6.7449101,156.35928)" />
+    <clipPath
+       clipPathUnits="userSpaceOnUse"
+       id="clipPath1856-1">
+      <g
+         id="g1864-3"
+         transform="translate(0,10)"
+         style="fill:#ffffff">
+        <rect
+           style="fill:#ffffff;stroke-width:0.261037"
+           id="rect1858-1"
+           width="110"
+           height="18"
+           y="15"
+           rx="9"
+           x="9" />
+        <rect
+           style="fill:#ffffff;stroke-width:0.261037"
+           id="rect1860-5"
+           width="110"
+           height="18"
+           y="45"
+           rx="9"
+           x="9" />
+        <rect
+           style="fill:#ffffff;stroke-width:0.261037"
+           id="rect1862-9"
+           width="110"
+           height="18"
+           y="75"
+           rx="9"
+           x="9" />
+      </g>
+    </clipPath>
+  </defs>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <path
+       style="fill:url(#linearGradient982);fill-opacity:1;stroke-width:0.704"
+       id="rect63"
+       width="128"
+       height="128"
+       x="0"
+       y="0"
+       sodipodi:type="rect"
+       clip-path="url(#clipPath1856-1)"
+       d="M 0,0 H 128 V 128 H 0 Z"
+       transform="1.1 (c68e22c387, 2021-05-23)" />
+  </g>
+</svg>

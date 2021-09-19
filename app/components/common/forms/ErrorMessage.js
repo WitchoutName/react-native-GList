@@ -13,6 +13,8 @@ const styles = StyleSheet.create({
     color: "red",
     fontWeight: "700",
     fontSize: 18,
+    marginHorizontal: 10,
+    overflow: "scroll",
   },
 });
 
