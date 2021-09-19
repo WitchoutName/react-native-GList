@@ -1,10 +1,20 @@
-import React from "react";
-import { StyleSheet, SafeAreaView, Platform, StatusBar } from "react-native";
+import React, { useEffect, useRef } from "react";
+import {
+  StyleSheet,
+  View,
+  SafeAreaView,
+  Platform,
+  StatusBar,
+} from "react-native";
 import AppLoading from "expo-app-loading";
 import { useFonts } from "expo-font";
 
+import Color from "./app/classes/Color";
+import LinearPanel from "./app/components/LinearPanel";
+import ScreenScroll from "./app/components/common/ScreenScroll";
 import LoginScreen from "./app/screens/loginScreen";
-import RegisterScreen from "./app/screens/RegisterScreen";
+import ListScreen from "./app/screens/ListScreen";
+import auth from "./app/services/authService";
 
 export default (props) => {
   let [fontsLoaded] = useFonts({
@@ -16,9 +26,23 @@ export default (props) => {
     return <AppLoading />;
   } else {
     return (
-      <SafeAreaView style={styles.container}>
-        <LoginScreen />
-      </SafeAreaView>
+      <View style={styles.container}>
+        <View>
+          <LinearPanel colors={[Color.purple, Color.blue]} />
+          <ScreenScroll
+            pages={[
+              [LoginScreen, {}],
+              [ListScreen, {}],
+            ]}
+            initIndex={1}
+            debug={false}
+            goBackOnKeyboard={true}
+            hideInactivePages
+            handle
+          />
+          {/* <LoginScreen scrollToIndex={() => {}} /> */}
+        </View>
+      </View>
     );
   }
 };

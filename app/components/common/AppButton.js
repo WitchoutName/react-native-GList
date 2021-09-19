@@ -4,7 +4,7 @@ import { LinearGradient } from "expo-linear-gradient";
 
 import Color from "../../classes/Color";
 
-const AppButton = ({ title, ...rest }) => {
+const AppButton = ({ title, fontSize, ...rest }) => {
   return (
     <View style={styles.outer}>
       <TouchableHighlight style={styles.touch} {...rest}>
@@ -15,7 +15,7 @@ const AppButton = ({ title, ...rest }) => {
             start={{ x: 0.5, y: 0 }}
             end={{ x: 1, y: 1 }}
           />
-          <Text style={styles.text}>{title}</Text>
+          <Text style={{ ...styles.text, fontSize }}>{title}</Text>
         </View>
       </TouchableHighlight>
     </View>
@@ -37,6 +37,7 @@ const styles = StyleSheet.create({
     width: "100%",
     height: 40,
     alignItems: "center",
+    justifyContent: "center",
   },
   outer: {
     flexDirection: "row",

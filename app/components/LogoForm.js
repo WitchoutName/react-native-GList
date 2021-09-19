@@ -24,7 +24,7 @@ const styles = StyleSheet.create({
     margin: 0,
   },
   logoBox: {
-    flex: 1,
+    height: "40%",
     flexShrink: 1,
   },
   logo: {
@@ -33,7 +33,7 @@ const styles = StyleSheet.create({
     top: "25%",
   },
   scrollStyle: {
-    flex: 2,
+    height: "60%",
     flexGrow: 1,
     alignItems: "center",
     justifyContent: "center",

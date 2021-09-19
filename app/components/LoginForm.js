@@ -11,10 +11,11 @@ const validationSchema = Yup.object().shape({
   password: Yup.string().required().min(4).label("Password"),
 });
 
-const LoginForm = ({ scrollToIndex }) => {
+const LoginForm = ({ scrollToIndex, onAuth }) => {
   const handleOnSubmit = async (values) => {
-    await auth.login(values.email, values.password);
-    user = await auth.getUser();
+    // await auth.login(values.email, values.password);
+    // user = await auth.getUser();
+    onAuth();
   };
 
   return (
