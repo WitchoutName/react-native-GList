@@ -1,4 +1,4 @@
-import React, { useState, useEffect. useRef } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { View, StyleSheet, Text } from "react-native";
 import Drawer from "react-native-drawer";
 import AppText from "../components/common/AppText";
