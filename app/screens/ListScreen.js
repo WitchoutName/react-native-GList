@@ -10,7 +10,6 @@ import EmptyMainList from "./../components/EmptyMainList";
 
 const ListScreen = ({ scrollToIndex }) => {
   const [list, setList] = useState({});
-  const 
 
   const handleLogout = () => {
     auth.logout();
