@@ -26,10 +26,14 @@ const ScreenScroll = (props) => {
   const [oldIndex, setOldIndex] = useState(null);
   const [scrollTarget, setScrollTarget] = useState(0);
   const [itemDisplay, setItemDisplay] = useState([]);
+  const [keyboeadOffsetting, setKeyboardOffsetting] = useState(false);
 
   useEffect(() => {
     const hideSubscription = Keyboard.addListener("keyboardDidHide", () => {
-      if (goBackOnKeyboard) handleScrollToIndex(index, true);
+      if (goBackOnKeyboard) {
+        setKeyboardOffsetting(true);
+        handleScrollToIndex(index, true);
+      }
     });
 
     return () => {
@@ -39,8 +43,11 @@ const ScreenScroll = (props) => {
 
   const onScrollEnd = () => {
     // unload old page
-    manageContent({ unloadIndex: oldIndex });
-    setOldIndex(index);
+    if (keyboeadOffsetting) setKeyboardOffsetting(false);
+    else {
+      manageContent({ unloadIndex: oldIndex });
+      setOldIndex(index);
+    }
   };
 
   const handleScroll = ({ nativeEvent }) => {

@@ -9,7 +9,15 @@ import {
 
 const screenWidth = Dimensions.get("window").width;
 
-const SideMenu = ({ isOpen, onClose, children, component, reverse }) => {
+const SideMenu = ({
+  isOpen,
+  onClose,
+  children,
+  component,
+  reverse,
+  width,
+  duration,
+}) => {
   const [active, setActive] = useState(false);
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const posAnim = useRef(new Animated.Value(reverse ? 400 : -400)).current;
@@ -17,13 +25,13 @@ const SideMenu = ({ isOpen, onClose, children, component, reverse }) => {
   const fadeIn = () => {
     Animated.timing(posAnim, {
       toValue: reverse ? 0 : 0,
-      duration: 250,
+      duration: duration === undefined ? 250 : duration,
       useNativeDriver: true,
     }).start();
 
     Animated.timing(fadeAnim, {
       toValue: 0.5,
-      duration: 250,
+      duration: duration === undefined ? 250 : duration,
       useNativeDriver: true,
     }).start();
   };
@@ -31,7 +39,7 @@ const SideMenu = ({ isOpen, onClose, children, component, reverse }) => {
   const fadeOut = () => {
     Animated.timing(fadeAnim, {
       toValue: 0,
-      duration: 250,
+      duration: duration === undefined ? 250 : duration,
       useNativeDriver: true,
     }).start(() => {
       setActive(false);
@@ -39,7 +47,7 @@ const SideMenu = ({ isOpen, onClose, children, component, reverse }) => {
 
     Animated.timing(posAnim, {
       toValue: reverse ? 400 : -400,
-      duration: 250,
+      duration: duration === undefined ? 250 : duration,
       useNativeDriver: true,
     }).start();
   };
@@ -70,7 +78,7 @@ const SideMenu = ({ isOpen, onClose, children, component, reverse }) => {
             <Animated.View
               style={[
                 styles.menu,
-                { transform: [{ translateX: posAnim }] },
+                { transform: [{ translateX: posAnim }], width: width || "80%" },
                 posStyle,
               ]}
             >
@@ -111,7 +119,6 @@ const styles = StyleSheet.create({
     flex: 1,
     position: "absolute",
     top: 0,
-    width: "80%",
     backgroundColor: "white",
     opacity: 1,
     height: "100%",

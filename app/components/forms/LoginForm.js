@@ -2,10 +2,10 @@ import React, { useState } from "react";
 import { View, StyleSheet, Button } from "react-native";
 import * as Yup from "yup";
 
-import SmallLink from "./common/SmallLink";
-import { ErrorMessage } from "./common/forms";
-import { AppForm, AppFormField, SubmitButton } from "./common/forms";
-import auth from "../services/authService";
+import SmallLink from "../common/SmallLink";
+import { ErrorMessage } from "../common/forms";
+import { AppForm, AppFormField, SubmitButton } from "../common/forms";
+import auth from "../../services/authService";
 
 const validationSchema = Yup.object().shape({
   email: Yup.string().required().email().label("Email"),

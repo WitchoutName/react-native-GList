@@ -1,59 +1,153 @@
 import React, { useState, useEffect, useRef } from "react";
-import { View, StyleSheet, Text } from "react-native";
+import { View, StyleSheet } from "react-native";
 
+import api from "../services/api";
 import AppText from "../components/common/AppText";
 import Screen from "../components/common/Screen";
-import List from "../components/List";
 import Navbar from "../components/Navbar";
-import auth from "../services/authService";
-import EmptyMainList from "./../components/EmptyMainList";
 import SideMenu from "./../components/common/SideMenu";
 import DataManagament from "../components/DataManagament";
-
-const SideMenuContent = () => {
-  return (
-    <View style={styles.list}>
-      <AppText>list items</AppText>
-    </View>
-  );
-};
+import EditUserForm from "../components/forms/EditUserForm";
+import CreateListForm from "./../components/forms/CreateListForm";
+import JoinListForm from "../components/forms/JoinListForm";
+import Modal from "../components/Modal";
 
 const ListScreen = ({ scrollToIndex }) => {
-  const [list, setList] = useState({});
+  const [lists, setLists] = useState([]);
+  const [list, setList] = useState({ title: "GLIst" });
   const [user, setUser] = useState({});
+  const [inputOpen, setInputOpen] = useState(false);
+  const [inputContent, setInputContent] = useState(null);
   const [drawerOpen, setDrawerOpen] = useState(false);
-  const drawer = useRef(null);
+  const [modalVisible, setModalVisible] = useState(false);
+  const [madalDeleteId, setModalDeleteId] = useState(null);
+
+  const handleModalClose = (state) => {
+    // if (state) handleLeaveList()                                        FIX MODAL
+    setModalVisible(false);
+  };
+
+  const handleInputClose = () => {
+    setInputOpen(false);
+  };
+
+  const handleActivateList = (id) => {
+    if (id !== list.id) {
+      api.list.getList(id).then(({ data: l }) => {
+        setList(l);
+        api.list.setActiveList(id);
+      });
+    }
+  };
+
+  const handleInitCreateList = () => {
+    setInputContent(
+      <CreateListForm onClose={handleInputClose} onCreateList={handleAddList} />
+    );
+    setInputOpen(true);
+  };
+
+  const handleInitJoinList = () => {
+    setInputContent(
+      <JoinListForm onClose={handleInputClose} onJoinList={handleAddList} />
+    );
+    setInputOpen(true);
+  };
+
+  const handleAddList = (newList) => {
+    setLists([newList, ...lists]);
+    setInputOpen(false);
+  };
+
+  const handleLeaveList = (listId) => {
+    setLists(lists.filter((l) => l.id === listId));
+  };
+
+  const handleUserEdit = () => {
+    setInputContent(
+      <EditUserForm
+        user={user}
+        onClose={handleInputClose}
+        onPutUser={handlePutUser}
+      />
+    );
+    setInputOpen(true);
+  };
+
+  const handlePutUser = (newUser) => {
+    setUser(newUser);
+    setInputOpen(false);
+  };
 
   const handleLogout = () => {
-    auth.logout();
+    api.auth.logout();
+    setUser({});
     scrollToIndex(0);
   };
 
   useEffect(() => {
-    setList({
-      title: "My Lisssssssssst 123",
+    api.list.getLists().then(({ data: l }) => {
+      setLists(l);
+
+      api.list.getActiveList().then((newId) => {
+        if (newId)
+          api.list.getList(newId).then(({ data: l }) => {
+            setList(l);
+          });
+        else setList(l[0]);
+      });
     });
 
-    auth.getUser().then((u) => {
+    api.auth.getUser().then((u) => {
       setUser(u);
     });
   }, []);
 
   return (
     <Screen>
-      <Navbar
-        onLogout={handleLogout}
-        listTitle={list.title}
-        onOpenDrawer={() => setDrawerOpen(!drawerOpen)}
+      <Modal
+        title="Leave"
+        description="Are you sure you want to leave this GList?"
+        visible={modalVisible}
+        onClose={() => setModalVisible(false)}
       />
       <SideMenu
-        isOpen={drawerOpen}
+        isOpen={inputOpen}
         onClose={() => setDrawerOpen(false)}
-        component={<DataManagament user={user} onLogout={handleLogout} />}
+        width="100%"
+        component={inputContent}
+        duration={200}
       >
-        <View style={styles.list}>
-          <AppText>list items</AppText>
-        </View>
+        <Navbar
+          onLogout={handleLogout}
+          listTitle={list.title}
+          onOpenDrawer={() => setDrawerOpen(!drawerOpen)}
+        />
+
+        <SideMenu
+          isOpen={drawerOpen}
+          onClose={() => setDrawerOpen(false)}
+          component={
+            <DataManagament
+              user={user}
+              lists={lists}
+              onUserEdit={handleUserEdit}
+              onLogout={handleLogout}
+              onActivateList={handleActivateList}
+              activeId={list.id}
+              onCreateList={handleInitCreateList}
+              onJoinList={handleInitJoinList}
+              callModal={(id) => {
+                setModalDeleteId(id);
+                setModalVisible(true);
+              }}
+            />
+          }
+        >
+          <View style={styles.list}>
+            <AppText>list items</AppText>
+          </View>
+        </SideMenu>
       </SideMenu>
     </Screen>
   );
@@ -68,6 +162,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     height: "100%",
+    width: "100%",
   },
 });
 

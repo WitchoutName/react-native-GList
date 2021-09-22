@@ -15,7 +15,7 @@ import ScreenScroll from "./app/components/common/ScreenScroll";
 import LoginScreen from "./app/screens/loginScreen";
 import ListScreen from "./app/screens/ListScreen";
 import auth from "./app/services/authService";
-import List from "./app/components/List";
+import { Stop } from "react-native-svg";
 
 export default (props) => {
   let [fontsLoaded] = useFonts({
@@ -43,7 +43,7 @@ export default (props) => {
   } else {
     return (
       <View style={styles.container}>
-        <View>
+        <View style={styles.wrap}>
           <LinearPanel colors={[Color.purple, Color.blue]} />
           <ScreenScroll
             pages={[
@@ -53,9 +53,8 @@ export default (props) => {
             initIndex={initIndex}
             debug={false}
             goBackOnKeyboard={true}
-            hideInactivePages={false}
+            hideInactivePages={true}
           />
-          <List />
         </View>
       </View>
     );
@@ -68,6 +67,12 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     alignItems: "center",
     justifyContent: "center",
+    width: "100%",
     paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
+  },
+  wrap: {
+    flex: 1,
+    width: "100%",
+    height: "100%",
   },
 });

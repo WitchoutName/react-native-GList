@@ -6,6 +6,8 @@ import HeartIcon from "./Components/HeartIcon";
 import DeleteIcon from "./Components/DeleteIcon";
 import EditIcon from "./Components/EditIcon";
 import HamburgerIcon from "./Components/HamburgerIcon";
+import LogoutIcon from "./Components/LogoutIcon";
+import BackArrowIcon from "./Components/BackArrowIcon";
 
 function Icon(props) {
   const icons = {
@@ -53,6 +55,20 @@ function Icon(props) {
     ),
     hamburger: (
       <HamburgerIcon
+        width={props.width ? props.width : 20}
+        height={props.height ? props.height : 20}
+        color={props.color}
+      />
+    ),
+    logout: (
+      <LogoutIcon
+        width={props.width ? props.width : 20}
+        height={props.height ? props.height : 20}
+        color={props.color}
+      />
+    ),
+    backArrow: (
+      <BackArrowIcon
         width={props.width ? props.width : 20}
         height={props.height ? props.height : 20}
         color={props.color}

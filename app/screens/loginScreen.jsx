@@ -2,10 +2,10 @@ import React, { useState, useEffect, useRef } from "react";
 import { View, StyleSheet, ScrollView, Button, Dimensions } from "react-native";
 
 import Screen from "../components/common/Screen";
-import LoginForm from "../components/LoginForm";
-import RegisterForm from "../components/RegisterForm";
-import ForgottenPasswordForm from "../components/ForgottenPasswordForm";
-import LogoForm from "../components/LogoForm";
+import LoginForm from "../components/forms/LoginForm";
+import RegisterForm from "../components/forms/RegisterForm";
+import ForgottenPasswordForm from "../components/forms/ForgottenPasswordForm";
+import LogoForm from "../components/forms/LogoForm";
 import ScreenScroll from "../components/common/ScreenScroll";
 
 const LoginScreen = ({ scrollToIndex }) => {

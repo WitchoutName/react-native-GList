@@ -4,7 +4,9 @@ import api from "./httpService";
 const authUrl = "auth/";
 const tokenKey = "token";
 
-api.setAuthToken(getAuthToken);
+getAuthToken().then((t) => {
+  api.setAuthToken(t);
+});
 
 export async function register(user) {
   const response = await api.client.put(authUrl + "get-token/", user);
@@ -20,7 +22,10 @@ export async function login(email, password) {
     password,
   });
   if (response.status >= 200 && response.status < 300) {
+    console.log("storing token");
     await setAuthToken(response.data.token);
+
+    return response;
   }
   return response;
 }
@@ -36,7 +41,7 @@ export function logout() {
 async function setAuthToken(authToken) {
   try {
     await AsyncStorage.setItem(tokenKey, authToken);
-    api.setAuthToken(getAuthToken);
+    api.setAuthToken(authToken);
   } catch (error) {
     throw new Error("Error storing the auth token");
   }
@@ -47,6 +52,16 @@ export async function getUser() {
     const { data } = await api.client.post(authUrl + "get-user/");
     return data;
   } catch (error) {
+    return null;
+  }
+}
+
+export async function putUser(user) {
+  try {
+    const response = await api.client.put(authUrl + "update-user/", user);
+    return response;
+  } catch (error) {
+    console.log(error);
     return null;
   }
 }
@@ -64,6 +79,7 @@ export default {
   loginWithAuthToken,
   logout,
   getUser,
+  putUser,
   getAuthToken,
   register,
 };

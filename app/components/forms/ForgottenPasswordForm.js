@@ -2,8 +2,8 @@ import React from "react";
 import { View, StyleSheet } from "react-native";
 import * as Yup from "yup";
 
-import SmallLink from "./common/SmallLink";
-import { AppForm, AppFormField, SubmitButton } from "./common/forms";
+import SmallLink from "../common/SmallLink";
+import { AppForm, AppFormField, SubmitButton } from "../common/forms";
 
 const validationSchema = Yup.object().shape({
   email: Yup.string().required().email().label("Email"),

@@ -2,13 +2,13 @@ import React, { useState } from "react";
 import { View, StyleSheet, Pressable } from "react-native";
 import * as Yup from "yup";
 
-import SmallLink from "./common/SmallLink";
-import { ErrorMessage } from "./common/forms";
-import { AppForm, AppFormField, SubmitButton } from "./common/forms";
-import auth from "../services/authService";
+import SmallLink from "../common/SmallLink";
+import { ErrorMessage } from "../common/forms";
+import { AppForm, AppFormField, SubmitButton } from "../common/forms";
+import auth from "../../services/authService";
 
 const validationSchema = Yup.object().shape({
-  username: Yup.string().required().label("Username"),
+  username: Yup.string().required().label("Name"),
   email: Yup.string().required().email().label("Email"),
   password1: Yup.string().required().min(4).label("Password"),
   password2: Yup.string().required().min(4).label("Password"),
@@ -44,7 +44,7 @@ const RegisterForm = ({ scrollToIndex, onAuth }) => {
       >
         <Pressable>
           <AppFormField
-            placeholder="Username"
+            placeholder="Name"
             autoCapitalize="none"
             autoCorrect={false}
             name="username"

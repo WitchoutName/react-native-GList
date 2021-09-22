@@ -6,7 +6,7 @@ const LogoForm = ({ children, scrollStyle, ...rest }) => {
     <View style={styles.login}>
       <View style={styles.logoBox}>
         <Image
-          source={require("../assets/images/logo-white.png")}
+          source={require("../../assets/images/logo-white.png")}
           style={styles.logo}
         />
       </View>
