@@ -1,11 +1,5 @@
 import React, { useEffect, useState } from "react";
-import {
-  StyleSheet,
-  View,
-  SafeAreaView,
-  Platform,
-  StatusBar,
-} from "react-native";
+import { StyleSheet, View, Platform, StatusBar } from "react-native";
 import AppLoading from "expo-app-loading";
 import { useFonts } from "expo-font";
 

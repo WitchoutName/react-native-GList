@@ -24,7 +24,9 @@ const DataManagament = ({
   activeId,
   onCreateList,
   onJoinList,
-  callModal,
+  onLeaveList,
+  onDeleteList,
+  onEditList,
 }) => {
   const [itemHeight, setItemHeight] = useState(0);
 
@@ -43,10 +45,13 @@ const DataManagament = ({
               <GlistsListItem
                 key={l.id}
                 item={l}
+                userId={user.id}
                 active={l.id === activeId}
                 onActivateList={onActivateList}
                 sendItemHeight={setItemHeight}
-                callModal={callModal}
+                onLeaveList={onLeaveList}
+                onDeleteList={onDeleteList}
+                onEditList={onEditList}
               />
             ))}
           </ScrollView>
@@ -54,12 +59,12 @@ const DataManagament = ({
         <View style={styles.addList}>
           <IconButton
             style={styles.createList}
-            icon={{ name: "logout", height: 60, width: 60 }}
+            icon={{ name: "plus", height: 60, width: 60 }}
             onPress={onCreateList}
           />
           <IconButton
             style={styles.createList}
-            icon={{ name: "logout", height: 60, width: 60 }}
+            icon={{ name: "search", height: 60, width: 60 }}
             onPress={onJoinList}
           />
         </View>

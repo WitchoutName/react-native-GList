@@ -5,7 +5,7 @@ import IconButton from "./common/IconButton";
 import AppText from "./common/AppText";
 import Color from "../classes/Color";
 
-const Modal = ({ visible, title, description, onClose }) => {
+const Modal = ({ visible, onClose, content }) => {
   return (
     <DefaultModal
       animationType="slide"
@@ -17,17 +17,13 @@ const Modal = ({ visible, title, description, onClose }) => {
     >
       <View style={styles.centeredView}>
         <View style={styles.modalView}>
-          <AppText style={styles.heading}>{title}</AppText>
-          <AppText style={styles.text}>{description}</AppText>
+          <AppText style={styles.heading}>{content.title}</AppText>
+          <AppText style={styles.text}>{content.description}</AppText>
           <View style={styles.buttonGroup}>
-            <IconButton
-              icon={{ name: "hamburger", height: 70, width: 70 }}
-              onPress={() => onClose(0)}
-            />
-            <IconButton
-              icon={{ name: "hamburger", height: 70, width: 70 }}
-              onPress={() => onClose(1)}
-            />
+            {content.buttons &&
+              content.buttons.map((b, i) => (
+                <IconButton key={i} icon={{ ...b.icon }} onPress={b.onPress} />
+              ))}
           </View>
         </View>
       </View>
@@ -40,15 +36,19 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
+    backgroundColor: "rgba(0,0,0,0.5)",
   },
   modalView: {
-    width: "80%",
-    height: "30%",
+    width: "79%",
+    height: "35%",
     paddingTop: 20,
     backgroundColor: "white",
     borderRadius: 20,
     alignItems: "center",
     justifyContent: "space-between",
+    elevation: 20,
+    borderColor: Color.listBorderIn,
+    borderWidth: 1,
   },
   buttonGroup: {
     flexDirection: "row",
@@ -64,6 +64,9 @@ const styles = StyleSheet.create({
     color: Color.blueText,
     borderColor: Color.listBorderOut,
     borderBottomWidth: 1,
+    marginHorizontal: 10,
+    textAlign: "center",
+    overflow: "visible",
   },
   text: {
     marginHorizontal: 10,

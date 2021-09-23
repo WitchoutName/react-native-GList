@@ -1,9 +1,11 @@
 import React from "react";
 import { View, StyleSheet, Text } from "react-native";
 
-const AppText = (props) => {
+const AppText = ({ style, children, ...rest }) => {
   return (
-    <Text style={{ ...styles.text, ...props.style }}>{props.children}</Text>
+    <Text style={{ ...styles.text, ...style }} {...rest}>
+      {children}
+    </Text>
   );
 };
 

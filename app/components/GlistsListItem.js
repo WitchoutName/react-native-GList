@@ -11,8 +11,38 @@ const GlistsListItem = ({
   active,
   itemHeight,
   sendItemHeight,
-  callModal,
+  onLeaveList,
+  onDeleteList,
+  onEditList,
+  userId,
 }) => {
+  const getButtons = () => {
+    return (
+      <View style={styles.btnGroup}>
+        {item.list_admin === userId ? (
+          <>
+            <IconButton
+              style={styles.leave}
+              icon={{ name: "edit", height: 40, width: 40 }}
+              onPress={() => onEditList(item.id)}
+            />
+            <IconButton
+              style={styles.leave}
+              icon={{ name: "delete", height: 40, width: 40 }}
+              onPress={() => onDeleteList(item.id)}
+            />
+          </>
+        ) : (
+          <IconButton
+            style={styles.leave}
+            icon={{ name: "logout", height: 40, width: 40 }}
+            onPress={() => onLeaveList(item.id)}
+          />
+        )}
+      </View>
+    );
+  };
+
   return (
     <TouchableOpacity
       key={item.id}
@@ -25,12 +55,10 @@ const GlistsListItem = ({
         itemHeight || sendItemHeight(nativeEvent.layout.height);
       }}
     >
-      <AppText>{item.title}</AppText>
-      <IconButton
-        style={styles.leave}
-        icon={{ name: "logout", height: 40, width: 40 }}
-        onPress={() => callModal(item.id)}
-      />
+      <AppText numberOfLines={1} style={styles.text}>
+        {item.title}
+      </AppText>
+      {getButtons()}
     </TouchableOpacity>
   );
 };
@@ -45,12 +73,19 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    backgroundColor: "green",
+  },
+  text: {
+    flex: 7,
   },
   leave: {
     margin: 0,
     height: 40,
     width: 40,
+  },
+  btnGroup: {
+    flex: 3,
+    flexDirection: "row",
+    justifyContent: "flex-end",
   },
 });
 

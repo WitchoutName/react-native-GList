@@ -35,13 +35,23 @@ export async function postList(list) {
   return response;
 }
 
+export async function putList(list) {
+  const response = await api.client.put(`${gListUrl}${list.id}/`, { ...list });
+  return response;
+}
+
 export async function joinList(token) {
   const response = await api.client.put(gListUrl, { token });
   return response;
 }
 
-export async function leaveList(token) {
-  const response = await api.client.delete(gListUrl, { token });
+export async function leaveList(lId) {
+  const response = await api.client.delete(gListUrl, { id: lId });
+  return response;
+}
+
+export async function deleteList(id) {
+  const response = await api.client.delete(`${gListUrl}${id}/`);
   return response;
 }
 
@@ -49,8 +59,10 @@ export default {
   getLists,
   getList,
   postList,
+  putList,
   joinList,
   leaveList,
+  deleteList,
   setActiveList,
   getActiveList,
 };

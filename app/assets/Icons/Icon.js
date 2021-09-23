@@ -8,6 +8,8 @@ import EditIcon from "./Components/EditIcon";
 import HamburgerIcon from "./Components/HamburgerIcon";
 import LogoutIcon from "./Components/LogoutIcon";
 import BackArrowIcon from "./Components/BackArrowIcon";
+import SearchIcon from "./Components/SearchIcon";
+import TickIcon from "./Components/TickIcon";
 
 function Icon(props) {
   const icons = {
@@ -69,6 +71,20 @@ function Icon(props) {
     ),
     backArrow: (
       <BackArrowIcon
+        width={props.width ? props.width : 20}
+        height={props.height ? props.height : 20}
+        color={props.color}
+      />
+    ),
+    search: (
+      <SearchIcon
+        width={props.width ? props.width : 20}
+        height={props.height ? props.height : 20}
+        color={props.color}
+      />
+    ),
+    tick: (
+      <TickIcon
         width={props.width ? props.width : 20}
         height={props.height ? props.height : 20}
         color={props.color}

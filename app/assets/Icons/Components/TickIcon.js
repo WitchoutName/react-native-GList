@@ -12,7 +12,7 @@ import {
 
 import Color from "../../../classes/Color";
 
-export default function DeleteIcon(props) {
+export default function TickIcon(props) {
   let color = "#000";
   return (
     <Svg height={props.height} width={props.width} viewBox="0 0 128 128">
@@ -29,10 +29,19 @@ export default function DeleteIcon(props) {
           <Stop offset="1" stopColor={Color.blue} stopOpacity="1" />
         </LinearGradient>
         <ClipPath id="clip">
-          <G scale="0.65" x="31" y="31" transform="rotate(45.001 24 24)">
-            <Rect width="110" height="18" y="15" x="9" rx="9" fill="#111" />
-            <Rect width="18" height="110" y="-30" x="54" rx="9" fill="#111" />
-            <Rect width="18" height="18" y="15" x="54" fill="#111" />
+          <G
+            scale="0.55"
+            x="15"
+            y="38"
+            transform="rotate(-45.001,118.37702,76.939119)"
+          >
+            <Rect width="18" height="70" y="-14.004595" x="73.258293" rx="9" />
+            <Rect width="110" height="18" y="37.995403" x="73.258293" rx="9" />
+            <Path
+              d="m 100.39903,-25.1015 c 0.0254,5.770307 -4.74314,9.231415 -9.006948,9.160306 -4.174322,0.07126 -8.925503,-3.241243 -9.020924,-9.134266 0.153754,-3.902505 2.451324,-6.013211 2.451324,-6.013211 6.421109,-6.421922 6.572449,-6.5766 6.572449,-6.5766 l 6.548376,6.553311 c 0,0 2.606413,2.630981 2.455723,6.01046 z"
+              transform="rotate(45.001)"
+            />
+            {/* <Rect width="18" height="18" y="15" x="54" fill="#111" /> */}
           </G>
         </ClipPath>
       </Defs>

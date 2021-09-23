@@ -1,19 +1,49 @@
 import React from "react";
-import { SvgXml } from "react-native-svg";
+import {
+  Path,
+  Svg,
+  Defs,
+  LinearGradient,
+  Stop,
+  Rect,
+  G,
+  ClipPath,
+} from "react-native-svg";
 
+import Color from "../../../classes/Color";
 
-export default function PlusIcon(props){
-    let color = "#000"
-    return(
-        <SvgXml width={props.width} height={props.height} xml={
-            `<svg
-           viewBox="0 0 128 128"
-           fill="${props.color ? props.color : color}">
-          <path
-             style="stroke-width:2.01171"
-             id="path847"
-             d="M 102.1454,54.807242 H 69.958102 V 22.619954 c 0,-3.419899 -2.615218,-6.035116 -6.035117,-6.035116 -3.419899,0 -6.035116,2.615217 -6.035116,6.035116 V 54.807242 H 25.700581 c -3.4199,0 -6.035117,2.615218 -6.035117,6.035117 0,3.419899 2.615217,6.035116 6.035117,6.035116 h 32.187288 v 32.187291 c 0,3.419904 2.615217,6.035114 6.035116,6.035114 3.419899,0 6.035117,-2.61521 6.035117,-6.035114 V 66.877475 H 102.1454 c 3.41989,0 6.03511,-2.615217 6.03511,-6.035116 0,-3.419899 -2.61522,-6.035117 -6.03511,-6.035117 z" />
-        </svg>`
-       } />
-    )
+export default function PlusIcon(props) {
+  let color = "#000";
+  return (
+    <Svg height={props.height} width={props.width} viewBox="0 0 128 128">
+      <Defs>
+        <LinearGradient
+          id="grad1"
+          x1="0"
+          y1="0"
+          x2="1"
+          y2="1"
+          gradientTransform="rotate(90)"
+        >
+          <Stop offset="0" stopColor={Color.purple} stopOpacity="1" />
+          <Stop offset="1" stopColor={Color.blue} stopOpacity="1" />
+        </LinearGradient>
+        <ClipPath id="clip">
+          <G scale="0.65" x="23" y="48">
+            <Rect width="110" height="18" y="15" x="9" rx="9" fill="#111" />
+            <Rect width="18" height="110" y="-30" x="54" rx="9" fill="#111" />
+            <Rect width="18" height="18" y="15" x="54" fill="#111" />
+          </G>
+        </ClipPath>
+      </Defs>
+      <Rect
+        x="0"
+        y="0"
+        width="100"
+        height="100"
+        fill="url(#grad1)"
+        clipPath="url(#clip)"
+      />
+    </Svg>
+  );
 }

@@ -10,6 +10,7 @@ import DataManagament from "../components/DataManagament";
 import EditUserForm from "../components/forms/EditUserForm";
 import CreateListForm from "./../components/forms/CreateListForm";
 import JoinListForm from "../components/forms/JoinListForm";
+import EditListForm from "../components/forms/EditListForm";
 import Modal from "../components/Modal";
 
 const ListScreen = ({ scrollToIndex }) => {
@@ -18,14 +19,9 @@ const ListScreen = ({ scrollToIndex }) => {
   const [user, setUser] = useState({});
   const [inputOpen, setInputOpen] = useState(false);
   const [inputContent, setInputContent] = useState(null);
+  const [modalContent, setModalContent] = useState({});
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
-  const [madalDeleteId, setModalDeleteId] = useState(null);
-
-  const handleModalClose = (state) => {
-    // if (state) handleLeaveList()                                        FIX MODAL
-    setModalVisible(false);
-  };
 
   const handleInputClose = () => {
     setInputOpen(false);
@@ -59,8 +55,92 @@ const ListScreen = ({ scrollToIndex }) => {
     setInputOpen(false);
   };
 
+  const handleInitEditList = (listId) => {
+    setInputContent(
+      <EditListForm
+        list={lists.filter((l) => l.id === listId)[0]}
+        onClose={handleInputClose}
+        onEditList={handleEditList}
+      />
+    );
+    setInputOpen(true);
+  };
+
+  const handleEditList = (newList) => {
+    setLists(lists.map((l) => (l.id === newList.id ? newList : l)));
+    setInputOpen(false);
+  };
+
   const handleLeaveList = (listId) => {
-    setLists(lists.filter((l) => l.id === listId));
+    setModalContent({
+      title: "Leave",
+      description: `Are you sure you want to leave \'${
+        lists.filter((l) => l.id === listId)[0].title
+      }\' GList?`,
+      buttons: [
+        {
+          icon: {
+            name: "tick",
+            height: 70,
+            width: 70,
+          },
+          onPress: () => leaveList(listId),
+        },
+        {
+          icon: {
+            name: "delete",
+            height: 70,
+            width: 70,
+          },
+          onPress: () => {
+            setModalVisible(false);
+          },
+        },
+      ],
+    });
+    setModalVisible(true);
+  };
+
+  const leaveList = (listId) => {
+    setLists(lists.filter((l) => l.id !== listId));
+    api.list.leaveList(listId).then((r) => console.log(r));
+    setModalVisible(false);
+  };
+
+  const handleDeleteList = (listId) => {
+    setModalContent({
+      title: "Delete",
+      description: `Are you sure you want to delete \'${
+        lists.filter((l) => l.id === listId)[0].title
+      }\' GList?`,
+      buttons: [
+        {
+          icon: {
+            name: "tick",
+            height: 70,
+            width: 70,
+          },
+          onPress: () => deleteList(listId),
+        },
+        {
+          icon: {
+            name: "delete",
+            height: 70,
+            width: 70,
+          },
+          onPress: () => {
+            setModalVisible(false);
+          },
+        },
+      ],
+    });
+    setModalVisible(true);
+  };
+
+  const deleteList = (listId) => {
+    setLists(lists.filter((l) => l.id !== listId));
+    api.list.deleteList(listId).then((r) => console.log(r));
+    setModalVisible(false);
   };
 
   const handleUserEdit = () => {
@@ -106,10 +186,9 @@ const ListScreen = ({ scrollToIndex }) => {
   return (
     <Screen>
       <Modal
-        title="Leave"
-        description="Are you sure you want to leave this GList?"
         visible={modalVisible}
         onClose={() => setModalVisible(false)}
+        content={modalContent}
       />
       <SideMenu
         isOpen={inputOpen}
@@ -137,10 +216,9 @@ const ListScreen = ({ scrollToIndex }) => {
               activeId={list.id}
               onCreateList={handleInitCreateList}
               onJoinList={handleInitJoinList}
-              callModal={(id) => {
-                setModalDeleteId(id);
-                setModalVisible(true);
-              }}
+              onEditList={handleInitEditList}
+              onLeaveList={handleLeaveList}
+              onDeleteList={handleDeleteList}
             />
           }
         >

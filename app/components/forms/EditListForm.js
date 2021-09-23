@@ -4,23 +4,23 @@ import * as Yup from "yup";
 
 import { ErrorMessage } from "../common/forms";
 import { AppForm, AppFormField, SubmitButton } from "../common/forms";
-import auth from "../../services/authService";
+import api from "../../services/api";
 import IconButton from "../common/IconButton";
-import { getUserImage } from "../../services/userService";
+import AppText from "../common/AppText";
+import Color from "../../classes/Color";
 
 const validationSchema = Yup.object().shape({
-  username: Yup.string().required().label("Name"),
+  title: Yup.string().required().label("Title"),
 });
 
-const EditUserForm = ({ user, onClose, onPutUser }) => {
+const EditListForm = ({ list, onClose, onEditList }) => {
   const [error, setError] = useState("");
-  const [name, setName] = useState(user.username);
 
   const handleOnSubmit = async (values) => {
-    const { data, status } = await auth.putUser({ ...values });
-    if (status === 400) setError(data.username);
+    const { data, status } = await api.list.putList({ ...list, ...values });
+    if (status === 400) setError(data.title);
     else if (status >= 500) setError("Server error.");
-    else onPutUser(data);
+    else onEditList(data);
   };
 
   return (
@@ -32,28 +32,19 @@ const EditUserForm = ({ user, onClose, onPutUser }) => {
           onPress={onClose}
         />
       </View>
-      <Image
-        style={styles.profile}
-        source={{
-          uri: getUserImage({
-            username: name || "",
-            image_url: user.image_url,
-          }),
-        }}
-      />
+      <AppText style={styles.heading}>Edit GList</AppText>
       <AppForm
-        initialValues={{ username: user.username }}
+        initialValues={{ title: list.title }}
         onSubmit={handleOnSubmit}
         enableReinitialize
         validationSchema={validationSchema}
         style={styles.form}
       >
         <AppFormField
-          placeholder="Name"
+          placeholder="Title"
           autoCapitalize="none"
           autoCorrect={false}
-          name="username"
-          onChangeBonus={(n) => setName(n)}
+          name="title"
         />
         <SubmitButton title="Update" />
         <ErrorMessage error={error} visible={error} />
@@ -80,12 +71,11 @@ const styles = StyleSheet.create({
   closeWrap: {
     width: "100%",
   },
-  profile: {
-    width: 150,
-    height: 150,
-    borderRadius: 75,
-    margin: 15,
+  heading: {
+    fontSize: 24,
+    color: Color.blueText,
+    paddingBottom: 10,
   },
 });
 
-export default EditUserForm;
+export default EditListForm;
