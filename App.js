@@ -9,7 +9,6 @@ import ScreenScroll from "./app/components/common/ScreenScroll";
 import LoginScreen from "./app/screens/loginScreen";
 import ListScreen from "./app/screens/ListScreen";
 import auth from "./app/services/authService";
-import { Stop } from "react-native-svg";
 
 export default (props) => {
   let [fontsLoaded] = useFonts({

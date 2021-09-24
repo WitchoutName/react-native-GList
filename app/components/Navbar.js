@@ -7,7 +7,7 @@ import AppButton from "./common/AppButton";
 import IconButton from "./common/IconButton";
 import CircleButton from "../components/CircleButton";
 
-const Navbar = ({ onLogout, listTitle, onOpenDrawer }) => {
+const Navbar = ({ listTitle, onOpenDrawer }) => {
   return (
     <View style={styles.navbar}>
       <>

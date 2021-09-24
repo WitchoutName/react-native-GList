@@ -6,163 +6,33 @@ import AppText from "../components/common/AppText";
 import Screen from "../components/common/Screen";
 import Navbar from "../components/Navbar";
 import SideMenu from "./../components/common/SideMenu";
-import DataManagament from "../components/DataManagament";
-import EditUserForm from "../components/forms/EditUserForm";
-import CreateListForm from "./../components/forms/CreateListForm";
-import JoinListForm from "../components/forms/JoinListForm";
-import EditListForm from "../components/forms/EditListForm";
+import ListManagament from "../components/ListManagament";
 import Modal from "../components/Modal";
+import UserManagement from "../components/UserManagement";
+import ItemList from "../components/ItemList";
 
 const ListScreen = ({ scrollToIndex }) => {
+  const [list, setList] = useState({
+    title: "GLIst",
+    item_set: [],
+    members: [],
+  });
   const [lists, setLists] = useState([]);
-  const [list, setList] = useState({ title: "GLIst" });
   const [user, setUser] = useState({});
-  const [inputOpen, setInputOpen] = useState(false);
+  const [inputVisible, setInputVisible] = useState(false);
   const [inputContent, setInputContent] = useState(null);
+  const [modalVisible, setModalVisible] = useState(false);
   const [modalContent, setModalContent] = useState({});
   const [drawerOpen, setDrawerOpen] = useState(false);
-  const [modalVisible, setModalVisible] = useState(false);
-
-  const handleInputClose = () => {
-    setInputOpen(false);
-  };
-
-  const handleActivateList = (id) => {
-    if (id !== list.id) {
-      api.list.getList(id).then(({ data: l }) => {
-        setList(l);
-        api.list.setActiveList(id);
-      });
-    }
-  };
-
-  const handleInitCreateList = () => {
-    setInputContent(
-      <CreateListForm onClose={handleInputClose} onCreateList={handleAddList} />
-    );
-    setInputOpen(true);
-  };
-
-  const handleInitJoinList = () => {
-    setInputContent(
-      <JoinListForm onClose={handleInputClose} onJoinList={handleAddList} />
-    );
-    setInputOpen(true);
-  };
-
-  const handleAddList = (newList) => {
-    setLists([newList, ...lists]);
-    setInputOpen(false);
-  };
-
-  const handleInitEditList = (listId) => {
-    setInputContent(
-      <EditListForm
-        list={lists.filter((l) => l.id === listId)[0]}
-        onClose={handleInputClose}
-        onEditList={handleEditList}
-      />
-    );
-    setInputOpen(true);
-  };
-
-  const handleEditList = (newList) => {
-    setLists(lists.map((l) => (l.id === newList.id ? newList : l)));
-    setInputOpen(false);
-  };
-
-  const handleLeaveList = (listId) => {
-    setModalContent({
-      title: "Leave",
-      description: `Are you sure you want to leave \'${
-        lists.filter((l) => l.id === listId)[0].title
-      }\' GList?`,
-      buttons: [
-        {
-          icon: {
-            name: "tick",
-            height: 70,
-            width: 70,
-          },
-          onPress: () => leaveList(listId),
-        },
-        {
-          icon: {
-            name: "delete",
-            height: 70,
-            width: 70,
-          },
-          onPress: () => {
-            setModalVisible(false);
-          },
-        },
-      ],
-    });
-    setModalVisible(true);
-  };
-
-  const leaveList = (listId) => {
-    setLists(lists.filter((l) => l.id !== listId));
-    api.list.leaveList(listId).then((r) => console.log(r));
-    setModalVisible(false);
-  };
-
-  const handleDeleteList = (listId) => {
-    setModalContent({
-      title: "Delete",
-      description: `Are you sure you want to delete \'${
-        lists.filter((l) => l.id === listId)[0].title
-      }\' GList?`,
-      buttons: [
-        {
-          icon: {
-            name: "tick",
-            height: 70,
-            width: 70,
-          },
-          onPress: () => deleteList(listId),
-        },
-        {
-          icon: {
-            name: "delete",
-            height: 70,
-            width: 70,
-          },
-          onPress: () => {
-            setModalVisible(false);
-          },
-        },
-      ],
-    });
-    setModalVisible(true);
-  };
-
-  const deleteList = (listId) => {
-    setLists(lists.filter((l) => l.id !== listId));
-    api.list.deleteList(listId).then((r) => console.log(r));
-    setModalVisible(false);
-  };
-
-  const handleUserEdit = () => {
-    setInputContent(
-      <EditUserForm
-        user={user}
-        onClose={handleInputClose}
-        onPutUser={handlePutUser}
-      />
-    );
-    setInputOpen(true);
-  };
-
-  const handlePutUser = (newUser) => {
-    setUser(newUser);
-    setInputOpen(false);
-  };
 
   const handleLogout = () => {
     api.auth.logout();
     setUser({});
     scrollToIndex(0);
+  };
+
+  const handleHidePanel = () => {
+    setDrawerOpen(false);
   };
 
   useEffect(() => {
@@ -172,6 +42,7 @@ const ListScreen = ({ scrollToIndex }) => {
       api.list.getActiveList().then((newId) => {
         if (newId)
           api.list.getList(newId).then(({ data: l }) => {
+            // console.log(l);
             setList(l);
           });
         else setList(l[0]);
@@ -191,14 +62,13 @@ const ListScreen = ({ scrollToIndex }) => {
         content={modalContent}
       />
       <SideMenu
-        isOpen={inputOpen}
+        isOpen={inputVisible}
         onClose={() => setDrawerOpen(false)}
         width="100%"
         component={inputContent}
         duration={200}
       >
         <Navbar
-          onLogout={handleLogout}
           listTitle={list.title}
           onOpenDrawer={() => setDrawerOpen(!drawerOpen)}
         />
@@ -207,24 +77,24 @@ const ListScreen = ({ scrollToIndex }) => {
           isOpen={drawerOpen}
           onClose={() => setDrawerOpen(false)}
           component={
-            <DataManagament
-              user={user}
-              lists={lists}
-              onUserEdit={handleUserEdit}
-              onLogout={handleLogout}
-              onActivateList={handleActivateList}
-              activeId={list.id}
-              onCreateList={handleInitCreateList}
-              onJoinList={handleInitJoinList}
-              onEditList={handleInitEditList}
-              onLeaveList={handleLeaveList}
-              onDeleteList={handleDeleteList}
-            />
+            <View style={styles.dataContainer}>
+              <ListManagament
+                userId={user.id}
+                listState={[list, setList]}
+                listsState={[lists, setLists]}
+                setModal={[setModalVisible, setModalContent]}
+                setInput={[setInputVisible, setInputContent]}
+                hidePanel={handleHidePanel}
+              />
+              <UserManagement
+                userState={[user, setUser]}
+                onLogout={handleLogout}
+                setInput={[setInputVisible, setInputContent]}
+              />
+            </View>
           }
         >
-          <View style={styles.list}>
-            <AppText>list items</AppText>
-          </View>
+          <ItemList userId={user.id} listState={[list, setList]} />
         </SideMenu>
       </SideMenu>
     </Screen>
@@ -235,12 +105,14 @@ const styles = StyleSheet.create({
   text: {
     fontSize: 35,
   },
-  list: {
+
+  dataContainer: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
     height: "100%",
     width: "100%",
+    padding: 5,
+    justifyContent: "space-between",
+    alignItems: "center",
   },
 });
 
