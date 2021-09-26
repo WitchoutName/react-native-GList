@@ -1,11 +1,6 @@
 import React, { useRef, useEffect, useState } from "react";
-import {
-  View,
-  ScrollView,
-  Dimensions,
-  StyleSheet,
-  Keyboard,
-} from "react-native";
+import { View, Animated, Dimensions, StyleSheet, Keyboard } from "react-native";
+
 import ScreenScrollItem from "./ScreenScrollItem";
 
 const ScreenScroll = (props) => {
@@ -21,7 +16,7 @@ const ScreenScroll = (props) => {
 
   const dimension = horizontal ? "width" : "height";
   const dimensionValue = Dimensions.get("window")[dimension];
-  const scrollView = useRef(null);
+  let scrollView = useRef(null);
   const [index, setIndex] = useState(initIndex);
   const [oldIndex, setOldIndex] = useState(null);
   const [scrollTarget, setScrollTarget] = useState(0);
@@ -99,13 +94,7 @@ const ScreenScroll = (props) => {
   }, []);
 
   return (
-    <ScrollView
-      ref={scrollView}
-      horizontal={horizontal}
-      scrollEnabled={debug}
-      style={styles.mainScroll}
-      onScroll={handleScroll}
-    >
+    <Animated.View style={styles.mainScroll}>
       <View
         style={{
           flexDirection: horizontal ? "row" : "column",
@@ -126,7 +115,7 @@ const ScreenScroll = (props) => {
           ))}
         </>
       </View>
-    </ScrollView>
+    </Animated.View>
   );
 };
 

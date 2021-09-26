@@ -1,133 +1,95 @@
 import React, { useState, useRef, useEffect } from "react";
-import {
-  StyleSheet,
-  View,
-  FlatList,
-  Text,
-  Dimensions,
-  Alert,
-  Animated,
-  TextInput,
-  TouchableOpacity,
-} from "react-native";
-import Icon from "../assets/Icons/Icon";
+import { StyleSheet, View, TextInput, Keyboard } from "react-native";
+import { Formik } from "formik";
+import * as Yup from "yup";
+
+import IconButton from "./common/IconButton";
 import Color from "../classes/Color";
+import SideMenu from "./common/SideMenu";
 
-function BottomInput(props) {
-  const hideAnim = useRef(new Animated.Value(0)).current;
-  const [enteredCount, setEnteredCount] = useState("1");
-  const [enteredTitle, setEnteredTitle] = useState("");
+const validationSchema = Yup.object().shape({
+  title: Yup.string().required().label("Title"),
+});
 
+function BottomInput({ visible, onClose, content, onSubmit, children }) {
   useEffect(() => {
-    hide(0);
-  }, []);
-
-  useEffect(() => {
-    if (props.isVisible) show(200);
-    else {
-      hide(200);
-    }
-  }, [props.isVisible]);
-
-  function show(time, callback) {
-    Animated.timing(hideAnim, {
-      toValue: 0,
-      duration: time,
-      useNativeDriver: true,
-    }).start(callback);
-  }
-  function hide(time, callback) {
-    Animated.timing(hideAnim, {
-      toValue: 60,
-      duration: time,
-      useNativeDriver: true,
-    }).start(callback);
-  }
-
-  function changeCount(text) {
-    setEnteredCount(text.replace(/[^0-9]/g, ""));
-  }
-
-  function changeTitle(text) {
-    setEnteredTitle(text);
-  }
-
-  function onPressAdd() {
-    if (enteredTitle) {
-      props.getValues(enteredCount ? enteredCount : "1", enteredTitle);
-      setEnteredTitle("");
-      setEnteredCount("");
-    }
-  }
+    Keyboard.addListener("keyboardDidHide", () => {
+      onClose();
+    });
+    return () => {
+      Keyboard.removeListener("keyboardDidHide");
+    };
+  });
 
   return (
-    <Animated.View
-      style={[styles.container, { transform: [{ translateY: hideAnim }] }]}
+    <SideMenu
+      isOpen={visible}
+      onClose={onClose}
+      vertical={true}
+      endOpacity={0}
+      height="10%"
+      component={
+        <View style={styles.container}>
+          <Formik
+            initialValues={{ title: content.initialTitle }}
+            onSubmit={(values) => onSubmit(values, content.id)}
+            enableReinitialize
+            validationSchema={validationSchema}
+          >
+            {({ handleSubmit, errors, values, setFieldValue }) => (
+              <View style={styles.form}>
+                <TextInput
+                  style={styles.title}
+                  placeholder="Item title..."
+                  value={values["title"]}
+                  onChangeText={(text) => setFieldValue("title", text)}
+                />
+                <IconButton
+                  icon={content.icon}
+                  style={[styles.icon, { opacity: errors.title ? 0.5 : 1 }]}
+                  onPress={handleSubmit}
+                />
+              </View>
+            )}
+          </Formik>
+        </View>
+      }
     >
-      <View style={styles.wrap}>
-        <TextInput
-          style={styles.count}
-          placeholder="1"
-          keyboardType="number-pad"
-          maxLength={2}
-          value={enteredCount}
-          onChangeText={changeCount}
-        />
-        <TextInput
-          style={styles.title}
-          placeholder="Item name..."
-          value={enteredTitle}
-          onChangeText={changeTitle}
-        />
-      </View>
-      <TouchableOpacity
-        activeOpacity={1}
-        onPress={onPressAdd}
-        style={[styles.plus, { marginLeft: (60 - props.icon.width) / 2 }]}
-      >
-        <Icon
-          name={props.icon.name}
-          width={props.icon.width}
-          height={props.icon.height}
-          color={enteredTitle ? props.icon.color.f : props.icon.color.s}
-        />
-      </TouchableOpacity>
-    </Animated.View>
+      {children}
+    </SideMenu>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: "center",
     justifyContent: "flex-start",
-    backgroundColor: "white",
-    flexDirection: "row",
+    backgroundColor: Color.white,
     bottom: 0,
     position: "absolute",
     elevation: 5,
     width: "100%",
-    padding: 10,
-  },
-  count: {
-    fontSize: 20,
+    height: "100%",
   },
   title: {
-    fontSize: 20,
-    width: Dimensions.get("window").width - 110,
-    marginLeft: 10,
+    margin: 0,
+    padding: 0,
+    flex: 7,
+    fontFamily: "varela",
+    fontSize: 22,
   },
-  wrap: {
-    flexDirection: "row",
-    borderBottomWidth: 1,
-    borderColor: "black",
-    padding: 5,
-  },
-  plus: {
-    marginLeft: 10,
-    position: "relative",
-    right: 0,
+  form: {
     width: "100%",
+    height: "100%",
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    padding: 10,
+  },
+  icon: {
+    margin: 0,
+    flex: 3,
+    backgroundColor: "red",
   },
 });
 

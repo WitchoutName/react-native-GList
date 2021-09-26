@@ -94,7 +94,7 @@ const ListScreen = ({ scrollToIndex }) => {
             </View>
           }
         >
-          <ItemList userId={user.id} listState={[list, setList]} />
+          <ItemList listState={[list, setList]} userState={[user, setUser]} />
         </SideMenu>
       </SideMenu>
     </Screen>

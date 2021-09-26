@@ -3,6 +3,7 @@ import {
   View,
   StyleSheet,
   TouchableWithoutFeedback,
+  TouchableOpacity,
   Image,
 } from "react-native";
 import Color from "../classes/Color";
@@ -13,43 +14,73 @@ import IconButton from "./common/IconButton";
 import StaticCheckbox from "./common/StaticCheckbox";
 
 const GlistItem = ({ item, checkedBy, userId, onCheck, onLike }) => {
-  return (
-    <View
-      onPress={() => onCheck(item.id)}
-      style={[
-        styles.container,
-        { backgroundColor: checkedBy ? Color.listBorderOut : "white" },
-      ]}
-    >
-      <View style={styles.item}>
-        <View style={styles.group}>
-          <StaticCheckbox checked={checkedBy} />
-          <AppText
-            numberOfLines={1}
-            style={{
-              ...styles.text,
-              ...{ textDecorationLine: checkedBy ? "line-through" : "none" },
-            }}
-          >
-            {item.title}
-          </AppText>
-        </View>
-        <IconButton
-          style={styles.leave}
-          icon={{ name: "heart", height: 35, width: 35 }}
-          onPress={() => onLike(item.id)}
-        />
-      </View>
-      {checkedBy && checkedBy.id !== userId && (
-        <View style={styles.user}>
-          <Image
-            style={styles.profile}
-            source={{ uri: getUserImage(checkedBy) }}
+  const checkable = (checkedBy && checkedBy.id === userId) || !checkedBy;
+
+  const getButtons = () => {
+    return (
+      <View style={styles.btnGroup}>
+        {!checkedBy ? (
+          <>
+            <IconButton
+              style={styles.leave}
+              icon={{ name: "edit", height: 40, width: 40 }}
+              onPress={() => {}}
+            />
+            <IconButton
+              style={styles.leave}
+              icon={{ name: "heart", height: 35, width: 35 }}
+              onPress={() => onLike(item.title)}
+            />
+          </>
+        ) : (
+          <IconButton
+            style={styles.leave}
+            icon={{ name: "heart", height: 35, width: 35 }}
+            onPress={() => onLike(item.title)}
           />
-          <AppText style={styles.username}>{checkedBy.username}</AppText>
+        )}
+      </View>
+    );
+  };
+
+  return (
+    <TouchableOpacity
+      activeOpacity={0.8}
+      delayPressIn={0.1}
+      onPress={() => checkable && onCheck(item.id)}
+    >
+      <View
+        style={[
+          styles.container,
+          { backgroundColor: checkedBy ? Color.listBorderOut : "white" },
+        ]}
+      >
+        <View style={styles.item}>
+          <View style={styles.group}>
+            <StaticCheckbox checked={checkedBy} />
+            <AppText
+              numberOfLines={1}
+              style={{
+                ...styles.text,
+                ...{ textDecorationLine: checkedBy ? "line-through" : "none" },
+              }}
+            >
+              {item.title}
+            </AppText>
+          </View>
+          {getButtons()}
         </View>
-      )}
-    </View>
+        {!checkable && (
+          <View style={styles.user}>
+            <Image
+              style={styles.profile}
+              source={{ uri: getUserImage(checkedBy) }}
+            />
+            <AppText style={styles.username}>{checkedBy.username}</AppText>
+          </View>
+        )}
+      </View>
+    </TouchableOpacity>
   );
 };
 
@@ -93,6 +124,11 @@ const styles = StyleSheet.create({
   },
   username: {
     fontSize: 15,
+  },
+  btnGroup: {
+    flex: 1,
+    flexDirection: "row",
+    justifyContent: "flex-end",
   },
 });
 
