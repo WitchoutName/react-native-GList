@@ -45,7 +45,6 @@ const GlistsListItem = ({
 
   return (
     <TouchableOpacity
-      key={item.id}
       onPress={() => onActivateList(item.id)}
       style={[
         styles.item,

@@ -95,6 +95,7 @@ const styles = StyleSheet.create({
   form: {
     alignItems: "center",
     padding: 0,
+    paddingBottom: 30,
     margin: 0,
     width: "100%",
     flex: 1,

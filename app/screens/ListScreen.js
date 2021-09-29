@@ -6,10 +6,10 @@ import AppText from "../components/common/AppText";
 import Screen from "../components/common/Screen";
 import Navbar from "../components/Navbar";
 import SideMenu from "./../components/common/SideMenu";
-import ListManagament from "../components/ListManagament";
 import Modal from "../components/Modal";
-import UserManagement from "../components/UserManagement";
+import DataManagement from "../components/managers/DataManagement";
 import ItemList from "../components/ItemList";
+import FavouriteItems from "../components/FavouriteItems";
 
 const ListScreen = ({ scrollToIndex }) => {
   const [list, setList] = useState({
@@ -23,7 +23,11 @@ const ListScreen = ({ scrollToIndex }) => {
   const [inputContent, setInputContent] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
   const [modalContent, setModalContent] = useState({});
-  const [drawerOpen, setDrawerOpen] = useState(false);
+  const [drawerVisible, setDrawerVisible] = useState(false);
+  const [drawerDeleteOnHide, setDrawerDeleteOnHide] = useState(true);
+  const [drawerAnimationHidden, setDrawerAnimationHidden] = useState(true);
+  const [drawerRightVisible, setDrawerRightVisible] = useState(false);
+  const [drawerRightContent, setDrawerRightContent] = useState(false);
 
   const handleLogout = () => {
     api.auth.logout();
@@ -31,21 +35,21 @@ const ListScreen = ({ scrollToIndex }) => {
     scrollToIndex(0);
   };
 
-  const handleHidePanel = () => {
-    setDrawerOpen(false);
-  };
-
   useEffect(() => {
-    api.list.getLists().then(({ data: l }) => {
-      setLists(l);
+    api.list.getLists().then(({ data: rLists }) => {
+      setLists(rLists.sort((a, b) => a.title.localeCompare(b.title)));
+
+      let listToLoad = null;
 
       api.list.getActiveList().then((newId) => {
-        if (newId)
-          api.list.getList(newId).then(({ data: l }) => {
-            // console.log(l);
-            setList(l);
-          });
-        else setList(l[0]);
+        if (newId) {
+          if (rLists.map((rl) => rl.id).includes(parseInt(newId))) {
+            api.list.getActiveList(null);
+            listToLoad = rLists[0].id;
+          } else listToLoad = newId;
+        } else listToLoad = rLists[0].id;
+
+        api.list.getList(listToLoad).then(({ data: l }) => setList(l));
       });
     });
 
@@ -63,38 +67,57 @@ const ListScreen = ({ scrollToIndex }) => {
       />
       <SideMenu
         isOpen={inputVisible}
-        onClose={() => setDrawerOpen(false)}
+        onClose={() => setDrawerVisible(false)}
         width="100%"
         component={inputContent}
         duration={200}
       >
         <Navbar
-          listTitle={list.title}
-          onOpenDrawer={() => setDrawerOpen(!drawerOpen)}
+          list={list}
+          onOpenDrawer={() => {
+            setDrawerVisible(!drawerVisible);
+            setDrawerRightVisible(false);
+          }}
+          onOpenDrawerRight={() => {
+            setDrawerRightVisible(!drawerRightVisible);
+            setDrawerVisible(false);
+          }}
         />
 
         <SideMenu
-          isOpen={drawerOpen}
-          onClose={() => setDrawerOpen(false)}
+          isOpen={drawerVisible}
+          onClose={() => setDrawerVisible(false)}
+          setAnimationHidden={setDrawerAnimationHidden}
+          deleteOnHide={drawerDeleteOnHide}
           component={
-            <View style={styles.dataContainer}>
-              <ListManagament
-                userId={user.id}
-                listState={[list, setList]}
-                listsState={[lists, setLists]}
-                setModal={[setModalVisible, setModalContent]}
-                setInput={[setInputVisible, setInputContent]}
-                hidePanel={handleHidePanel}
-              />
-              <UserManagement
-                userState={[user, setUser]}
-                onLogout={handleLogout}
-                setInput={[setInputVisible, setInputContent]}
-              />
-            </View>
+            <DataManagement
+              userState={[user, setUser]}
+              listState={[list, setList]}
+              listsState={[lists, setLists]}
+              drawerControls={[
+                setDrawerVisible,
+                setDrawerDeleteOnHide,
+                drawerAnimationHidden,
+              ]}
+              setModal={[setModalVisible, setModalContent]}
+              setInput={[setInputVisible, setInputContent]}
+              onLogout={handleLogout}
+            />
           }
         >
-          <ItemList listState={[list, setList]} userState={[user, setUser]} />
+          <SideMenu
+            isOpen={drawerRightVisible}
+            onClose={() => setDrawerRightVisible(false)}
+            reverse={true}
+            component={
+              <FavouriteItems
+                userState={[user, setUser]}
+                listState={[list, setList]}
+              />
+            }
+          >
+            <ItemList listState={[list, setList]} userState={[user, setUser]} />
+          </SideMenu>
         </SideMenu>
       </SideMenu>
     </Screen>
@@ -104,15 +127,6 @@ const ListScreen = ({ scrollToIndex }) => {
 const styles = StyleSheet.create({
   text: {
     fontSize: 35,
-  },
-
-  dataContainer: {
-    flex: 1,
-    height: "100%",
-    width: "100%",
-    padding: 5,
-    justifyContent: "space-between",
-    alignItems: "center",
   },
 });
 

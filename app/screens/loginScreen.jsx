@@ -30,7 +30,7 @@ const LoginScreen = ({ scrollToIndex }) => {
           initIndex={1}
           horizontal={true}
           innerScroll={true}
-          hideInactivePages={false}
+          hideInactivePages={true}
           debug={false}
         />
       </LogoForm>

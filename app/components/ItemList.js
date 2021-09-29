@@ -1,43 +1,46 @@
-import { isLoaded } from "expo-font";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { View, StyleSheet, FlatList, Dimensions } from "react-native";
-import { KeyboardAwareFlatList } from "react-native-keyboard-aware-scroll-view";
 
 import api from "../services/api";
+import tools from "../tools";
 import GlistItem from "./GListItem";
 import VirtualizedList from "./common/VirtualizedList";
 import SnackBar from "./common/SnackBar";
 import OpacityCircleButton from "./OpacityCircleButton";
 import BottomInput from "./BottomInput";
-import Color from "../classes/Color";
 
 const screenWidth = Dimensions.get("window").width;
 
 const ItemList = ({ listState, userState }) => {
   const [list, setList] = listState;
   const [user, setUser] = userState;
+  const flatList = useRef();
   const [refreshing, setRefreshing] = useState(false);
   const [snackbarVisible, setSnackbarVisible] = useState(false);
   const [snackbarTitle, setSnackbarTitle] = useState("");
 
-  const [active, setActive] = useState(false);
   const [deleteVisible, setDeleteVisible] = useState(false);
   const [inputVisible, setInputVisible] = useState(false);
   const [inputContent, setInputContent] = useState({});
 
   const handleCheck = (id) => {
-    let item = null;
-    let items = [...list.item_set].map((i) => {
-      if (i.id === id) {
-        item = i;
-        item.checked_by = item.checked_by ? null : user.id;
-        return item;
-      } else return i;
-    });
-    setList({ ...list, item_set: items });
-
-    api.item.putItem(item);
+    const item = list.item_set.filter((i) => i.id === id)[0];
+    tools.item.editItem(
+      { ...item, checked_by: item.checked_by ? null : user.id },
+      listState
+    );
   };
+
+  function handleEdit(itemId, index) {
+    flatList.current.scrollToIndex({ index, animated: true });
+    const item = list.item_set.filter((i) => i.id === itemId)[0];
+    setInputContent({
+      icon: { name: "edit", height: 55, width: 55 },
+      initialTitle: item.title,
+      id: itemId,
+    });
+    setInputVisible(true);
+  }
 
   const handleLike = (title) => {
     setSnackbarTitle(`\'${title}\' added to your favourites!`);
@@ -45,10 +48,10 @@ const ItemList = ({ listState, userState }) => {
     setTimeout(() => {
       setSnackbarVisible(false);
     }, 2000);
-    api.item.postItem({
-      title,
-      user: user.id,
-    });
+
+    tools.item.addItem(title, userState, "user");
+
+    // TODO: Add item to user fav
   };
 
   function handlePressPlus() {
@@ -59,14 +62,29 @@ const ItemList = ({ listState, userState }) => {
     setInputVisible(true);
   }
 
-  function handlePressEdit(itemId) {
-    editedId.current = itemId;
-    withdrawInput("edit");
-  }
-
   function handlePressDelete() {
+    tools.item.deleteItems(
+      list.item_set.filter((i) => i.checked_by === user.id).map((i) => i.id),
+      listState
+    );
+
     setDeleteVisible(false);
   }
+
+  function handleSubmit(title, id) {
+    if (id) {
+      const item = list.item_set.filter((i) => i.id === id)[0];
+      tools.item.editItem({ ...item, title }, listState);
+    } else {
+      tools.item.addItem(title, listState, "list");
+    }
+  }
+
+  useEffect(() => {
+    const checkedByMe = list.item_set.filter((i) => i.checked_by === user.id);
+    if (deleteVisible && checkedByMe.length === 0) setDeleteVisible(false);
+    else if (!deleteVisible && checkedByMe.length > 0) setDeleteVisible(true);
+  }, [list]);
 
   return (
     <View style={[styles.scrollBox]}>
@@ -74,20 +92,25 @@ const ItemList = ({ listState, userState }) => {
         visible={inputVisible}
         content={inputContent}
         onClose={() => setInputVisible(false)}
-        onSubmit={() => {}}
+        onSubmit={handleSubmit}
       >
         <VirtualizedList>
           <FlatList
+            ref={flatList}
             style={{ width: screenWidth }}
             contentContainerStyle={{ paddingVertical: 10 }}
             key={"0"}
             data={list.item_set}
-            renderItem={({ item: i }) => (
+            renderItem={({ item, index }) => (
               <GlistItem
-                item={i}
-                checkedBy={list.members.filter((m) => m.id === i.checked_by)[0]}
+                item={item}
+                index={index}
+                checkedBy={
+                  list.members.filter((m) => m.id === item.checked_by)[0]
+                }
                 userId={user.id}
                 onCheck={handleCheck}
+                onEdit={handleEdit}
                 onLike={handleLike}
               />
             )}
@@ -107,8 +130,8 @@ const ItemList = ({ listState, userState }) => {
         />
         <OpacityCircleButton
           isVisible={!inputVisible && deleteVisible}
-          style={{ position: "absolute", bottom: 10, left: 10 }}
-          icon={{ name: "delete", width: 30, height: 30 }}
+          style={{ position: "absolute", bottom: 30, left: 10 }}
+          icon={{ name: "delete", width: 53, height: 53 }}
           onPress={handlePressDelete}
         />
         <OpacityCircleButton

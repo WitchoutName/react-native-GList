@@ -27,10 +27,6 @@ export default (props) => {
     });
   }, []);
 
-  // useEffect(()=>{
-
-  // }, [initIndex])
-
   if (!fontsLoaded || !authCheck) {
     return <AppLoading />;
   } else {
@@ -40,13 +36,14 @@ export default (props) => {
           <LinearPanel colors={[Color.purple, Color.blue]} />
           <ScreenScroll
             pages={[
-              [LoginScreen, {}],
+              [LoginScreen, {}, ["66%"]],
               [ListScreen, {}],
             ]}
             initIndex={initIndex}
             debug={false}
             goBackOnKeyboard={true}
             hideInactivePages={true}
+            horizontal={false}
           />
         </View>
       </View>

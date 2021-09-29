@@ -3,7 +3,7 @@ import api from "./httpService";
 const itemUrl = "api/user/glist/item/";
 
 export async function getItems() {
-  const response = await api.client.post(itemUrl);
+  const response = await api.client.get(itemUrl);
   return response;
 }
 

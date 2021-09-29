@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from "react";
 import { StyleSheet, View, TextInput, Keyboard } from "react-native";
 import { Formik } from "formik";
 import * as Yup from "yup";
+import { useKeyboard } from "@react-native-community/hooks";
 
 import IconButton from "./common/IconButton";
 import Color from "../classes/Color";
@@ -12,6 +13,20 @@ const validationSchema = Yup.object().shape({
 });
 
 function BottomInput({ visible, onClose, content, onSubmit, children }) {
+  const keyboard = useKeyboard();
+
+  const getIcon = (handleSubmit, errors) => {
+    return (
+      <IconButton
+        icon={content.icon}
+        style={[styles.icon, { opacity: errors.title ? 0.5 : 1 }]}
+        onPress={() => {
+          handleSubmit();
+        }}
+      />
+    );
+  };
+
   useEffect(() => {
     Keyboard.addListener("keyboardDidHide", () => {
       onClose();
@@ -21,6 +36,11 @@ function BottomInput({ visible, onClose, content, onSubmit, children }) {
     };
   });
 
+  const handleSubmit = (values, { resetForm }) => {
+    onSubmit(values.title, content.id);
+    content.id ? onClose() : resetForm();
+  };
+
   return (
     <SideMenu
       isOpen={visible}
@@ -28,15 +48,16 @@ function BottomInput({ visible, onClose, content, onSubmit, children }) {
       vertical={true}
       endOpacity={0}
       height="10%"
+      aditionalOffset={keyboard.keyboardShown ? keyboard.keyboardHeight : 0}
       component={
         <View style={styles.container}>
           <Formik
             initialValues={{ title: content.initialTitle }}
-            onSubmit={(values) => onSubmit(values, content.id)}
+            onSubmit={handleSubmit}
             enableReinitialize
             validationSchema={validationSchema}
           >
-            {({ handleSubmit, errors, values, setFieldValue }) => (
+            {({ handleSubmit, errors, values, setFieldValue, resetForm }) => (
               <View style={styles.form}>
                 <TextInput
                   style={styles.title}
@@ -44,11 +65,7 @@ function BottomInput({ visible, onClose, content, onSubmit, children }) {
                   value={values["title"]}
                   onChangeText={(text) => setFieldValue("title", text)}
                 />
-                <IconButton
-                  icon={content.icon}
-                  style={[styles.icon, { opacity: errors.title ? 0.5 : 1 }]}
-                  onPress={handleSubmit}
-                />
+                {getIcon(handleSubmit, errors)}
               </View>
             )}
           </Formik>
@@ -77,6 +94,8 @@ const styles = StyleSheet.create({
     flex: 7,
     fontFamily: "varela",
     fontSize: 22,
+    borderBottomWidth: 1,
+    borderColor: Color.listBorderOut,
   },
   form: {
     width: "100%",

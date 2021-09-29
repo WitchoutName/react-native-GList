@@ -19,8 +19,12 @@ const SideMenu = ({
   reverse,
   width, // percentage only
   height, // percentage only
+  aditionalOffset,
   duration,
+  setAnimationHidden,
+  deleteOnHide,
 }) => {
+  aditionalOffset = aditionalOffset || 0;
   const menuSize = {
     width: sw * (width ? parseInt(width.slice(0, -1)) / 100 : 0.8),
     height: sh * (height ? parseInt(height.slice(0, -1)) / 100 : 0.8),
@@ -34,8 +38,9 @@ const SideMenu = ({
   ).current;
 
   const fadeIn = () => {
+    if (setAnimationHidden) setAnimationHidden(false);
     Animated.timing(posAnim, {
-      toValue: vertical ? -23 : 0,
+      toValue: vertical ? -23 - aditionalOffset : 0 + aditionalOffset,
       duration: duration === undefined ? 250 : duration,
       useNativeDriver: true,
     }).start();
@@ -56,15 +61,18 @@ const SideMenu = ({
         : -menuSize.width,
       duration: duration === undefined ? 250 : duration,
       useNativeDriver: true,
-    }).start();
+    }).start(() => {
+      if (setAnimationHidden) {
+        setAnimationHidden(true);
+      }
+      if (deleteOnHide === undefined || deleteOnHide) setActive(false);
+    });
 
     Animated.timing(fadeAnim, {
       toValue: 0,
       duration: duration === undefined ? 250 : duration,
       useNativeDriver: true,
-    }).start(() => {
-      setActive(false);
-    });
+    }).start();
   };
 
   useEffect(() => {
@@ -72,7 +80,7 @@ const SideMenu = ({
       setActive(true);
       fadeIn();
     } else fadeOut();
-  }, [isOpen]);
+  }, [isOpen, aditionalOffset]);
 
   const dimensions = [
     ["height", "Y", "bottom"],

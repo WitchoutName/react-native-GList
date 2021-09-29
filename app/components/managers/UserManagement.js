@@ -1,10 +1,11 @@
 import React from "react";
 import { View, StyleSheet, Image } from "react-native";
 
-import EditUserForm from "./forms/EditUserForm";
-import { getUserImage, getUserName } from "../services/userService";
-import IconButton from "./common/IconButton";
-import AppText from "./common/AppText";
+import Color from "../../classes/Color";
+import EditUserForm from "../forms/EditUserForm";
+import { getUserImage, getUserName } from "../../services/userService";
+import IconButton from "../common/IconButton";
+import AppText from "../common/AppText";
 
 const UserManagement = ({ userState, onLogout, setInput }) => {
   const [user, setUser] = userState;
@@ -57,6 +58,8 @@ const styles = StyleSheet.create({
     paddingTop: 4,
     paddingBottom: 25,
     paddingHorizontal: 7,
+    borderTopWidth: 1,
+    borderColor: Color.separator,
   },
   info: {
     flex: 1,

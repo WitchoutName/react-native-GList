@@ -13,7 +13,15 @@ import AppText from "./common/AppText";
 import IconButton from "./common/IconButton";
 import StaticCheckbox from "./common/StaticCheckbox";
 
-const GlistItem = ({ item, checkedBy, userId, onCheck, onLike }) => {
+const GlistItem = ({
+  item,
+  index,
+  checkedBy,
+  userId,
+  onCheck,
+  onEdit,
+  onLike,
+}) => {
   const checkable = (checkedBy && checkedBy.id === userId) || !checkedBy;
 
   const getButtons = () => {
@@ -24,7 +32,7 @@ const GlistItem = ({ item, checkedBy, userId, onCheck, onLike }) => {
             <IconButton
               style={styles.leave}
               icon={{ name: "edit", height: 40, width: 40 }}
-              onPress={() => {}}
+              onPress={() => onEdit(item.id, index)}
             />
             <IconButton
               style={styles.leave}

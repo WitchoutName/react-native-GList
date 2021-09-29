@@ -30,6 +30,8 @@ export default {
   grayText: "#647881",
   link: "#000AFF",
   white: "#FFF",
+  black: "#000",
+  red: "#D94F4F",
   listBorderOut: "#C4C4C4",
   listBorderIn: "#E3E3E3",
   separator: "#ddd",

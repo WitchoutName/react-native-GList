@@ -7,7 +7,7 @@ import AppButton from "./common/AppButton";
 import IconButton from "./common/IconButton";
 import CircleButton from "../components/CircleButton";
 
-const Navbar = ({ listTitle, onOpenDrawer }) => {
+const Navbar = ({ list, onOpenDrawer, onOpenDrawerRight }) => {
   return (
     <View style={styles.navbar}>
       <>
@@ -16,10 +16,14 @@ const Navbar = ({ listTitle, onOpenDrawer }) => {
           style={styles.tab}
           onPress={onOpenDrawer}
         />
-        <AppText style={styles.titleb}>{listTitle}</AppText>
+        <View style={{ alignItems: "center" }}>
+          <AppText style={styles.title}>{list.title}</AppText>
+          <AppText style={styles.code}>Code: {list.token} </AppText>
+        </View>
         <IconButton
           icon={{ name: "heart", height: 50, width: 50 }}
           style={styles.fav}
+          onPress={onOpenDrawerRight}
         />
       </>
     </View>
@@ -46,8 +50,12 @@ const styles = StyleSheet.create({
     top: 0,
   },
   title: {
-    // position: "absolute",
-    // left: "50%",
+    fontSize: 24,
+    color: Color.black,
+  },
+  code: {
+    fontSize: 14,
+    color: Color.grayText,
   },
   fav: {
     position: "absolute",

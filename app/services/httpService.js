@@ -5,7 +5,6 @@ const client = create({
 });
 
 async function setAuthToken(token) {
-  console.log("token:", token);
   if (token) {
     client.addAsyncRequestTransform(async (request) => {
       request.headers["Authorization"] = `Token ${token}`;

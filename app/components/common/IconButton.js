@@ -4,6 +4,7 @@ import { View, StyleSheet, TouchableOpacity } from "react-native";
 import Icon from "../../assets/Icons/Icon";
 
 const IconButton = (props) => {
+  // console.log(props.icon);
   return (
     <TouchableOpacity
       activeOpacity={0.5}

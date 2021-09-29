@@ -1,5 +1,12 @@
 import React, { useState } from "react";
-import { View, StyleSheet, ScrollView, Dimensions } from "react-native";
+import {
+  View,
+  StyleSheet,
+  ScrollView,
+  Dimensions,
+  KeyboardAvoidingView,
+  Keyboard,
+} from "react-native";
 
 const ScreenScrollItem = ({
   Page,
@@ -7,6 +14,7 @@ const ScreenScrollItem = ({
   scroll,
   display,
   horizontal,
+  style,
 }) => {
   const dimensions = Dimensions.get("window");
   const dimension = horizontal ? "width" : "height";
@@ -24,8 +32,9 @@ const ScreenScrollItem = ({
     return (
       <Wrapper
         style={{
-          height: Wrapper === ScrollView ? "auto" : dimensions.height,
+          height: "100%",
           ...screenSize,
+          ...style,
         }}
         contentContainerStyle={{ flexGrow: 1 }}
         horizontal={!horizontal}
