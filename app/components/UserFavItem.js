@@ -4,14 +4,16 @@ import AppText from "./common/AppText";
 import IconButton from "./common/IconButton";
 import Color from "../classes/Color";
 
-const UserFavItem = ({ item, onAdd, onDelete }) => {
+const UserFavItem = ({ item, onAdd, onDelete, showAdd }) => {
   return (
     <View style={styles.item}>
-      <IconButton
-        style={styles.leave}
-        icon={{ name: "plus", height: 42, width: 42 }}
-        onPress={() => onAdd(item.title)}
-      />
+      {showAdd && (
+        <IconButton
+          style={styles.leave}
+          icon={{ name: "plus", height: 42, width: 42 }}
+          onPress={() => onAdd(item.title)}
+        />
+      )}
       <AppText>{item.title}</AppText>
       <IconButton
         style={styles.leave}

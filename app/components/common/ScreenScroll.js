@@ -125,7 +125,14 @@ const ScreenScroll = (props) => {
 
   let posStyle = {};
   posStyle[dim[0]] = compSize[dim[0]];
-  posStyle[dim[2]] = compSize[dim[0]] / 2;
+  posStyle[dim[2]] =
+    compSize[dim[0]] / (pages.length / (pages.length - pages.length / 2.5)) -
+    54 * (5 - pages.length);
+  // posStyle[dim[2]] = compSize[dim[0]] * 0;
+  // posStyle[dim[2]] = compSize[dim[0]] / 2;
+
+  // WHY THE HELL DOES THIS WORK ????????
+
   posStyle["transform"] = [{}];
   posStyle["transform"][0][`translate${dim[1]}`] = posAnim;
 
@@ -133,7 +140,6 @@ const ScreenScroll = (props) => {
     posStyle["left"] = 0;
     posStyle["right"] = 0;
     posStyle["top"] = 0;
-    // console.log(posStyle);
   }
 
   useEffect(() => {

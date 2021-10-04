@@ -1,8 +1,9 @@
 import React, { useState, useEffect, useRef } from "react";
 import { View, StyleSheet } from "react-native";
+import { AdMobBanner } from "expo-ads-admob";
 
 import api from "../services/api";
-import AppText from "../components/common/AppText";
+import Loader from "../components/Loader";
 import Screen from "../components/common/Screen";
 import Navbar from "../components/Navbar";
 import SideMenu from "./../components/common/SideMenu";
@@ -13,7 +14,7 @@ import FavouriteItems from "../components/FavouriteItems";
 
 const ListScreen = ({ scrollToIndex }) => {
   const [list, setList] = useState({
-    title: "GLIst",
+    title: "GList",
     item_set: [],
     members: [],
   });
@@ -28,31 +29,37 @@ const ListScreen = ({ scrollToIndex }) => {
   const [drawerAnimationHidden, setDrawerAnimationHidden] = useState(true);
   const [drawerRightVisible, setDrawerRightVisible] = useState(false);
   const [drawerRightContent, setDrawerRightContent] = useState(false);
+  const [loaging, setLoading] = useState(false);
+  const [ads, setAds] = useState(true);
 
   const handleLogout = () => {
-    api.auth.logout();
-    setUser({});
-    scrollToIndex(0);
+    api.auth.logout().then(() => {
+      setUser({});
+      scrollToIndex(0);
+    });
   };
 
   useEffect(() => {
     api.list.getLists().then(({ data: rLists }) => {
       setLists(rLists.sort((a, b) => a.title.localeCompare(b.title)));
-
       let listToLoad = null;
-
       api.list.getActiveList().then((newId) => {
         if (newId) {
-          if (rLists.map((rl) => rl.id).includes(parseInt(newId))) {
-            api.list.getActiveList(null);
-            listToLoad = rLists[0].id;
+          if (!rLists.map((rl) => rl.id).includes(parseInt(newId))) {
+            api.list.setActiveList(null);
+            if (rLists.length > 0) {
+              listToLoad = rLists[0].id;
+              api.list.setActiveList(listToLoad);
+            }
           } else listToLoad = newId;
-        } else listToLoad = rLists[0].id;
-
-        api.list.getList(listToLoad).then(({ data: l }) => setList(l));
+        } else if (rLists.length > 0) {
+          listToLoad = rLists[0].id;
+          api.list.setActiveList(listToLoad);
+        }
+        if (listToLoad)
+          api.list.getList(listToLoad).then(({ data: l }) => setList(l));
       });
     });
-
     api.auth.getUser().then((u) => {
       setUser(u);
     });
@@ -102,6 +109,7 @@ const ListScreen = ({ scrollToIndex }) => {
               setModal={[setModalVisible, setModalContent]}
               setInput={[setInputVisible, setInputContent]}
               onLogout={handleLogout}
+              setLoading={setLoading}
             />
           }
         >
@@ -116,10 +124,23 @@ const ListScreen = ({ scrollToIndex }) => {
               />
             }
           >
-            <ItemList listState={[list, setList]} userState={[user, setUser]} />
+            <ItemList
+              listState={[list, setList]}
+              ads={ads}
+              userState={[user, setUser]}
+            />
           </SideMenu>
         </SideMenu>
       </SideMenu>
+      <Loader visible={loaging} duration={250} />
+      {ads && (
+        <View style={{ marginBottom: 24 }}>
+          <AdMobBanner
+            bannerSize="fullBanner"
+            adUnitID="ca-app-pub-5488365505117873/9963946005"
+          />
+        </View>
+      )}
     </Screen>
   );
 };

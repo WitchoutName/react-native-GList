@@ -98,7 +98,7 @@ const SideMenu = ({
 
   return (
     <View View style={styles.container}>
-      <>
+      <View style={styles.container}>
         {children}
         {active && (
           <View style={styles.touchBox}>
@@ -114,7 +114,7 @@ const SideMenu = ({
             </Animated.View>
           </View>
         )}
-      </>
+      </View>
     </View>
   );
 };
@@ -125,6 +125,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     width: "100%",
+    height: 500,
   },
   touchBox: {
     flex: 1,

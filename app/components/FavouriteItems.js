@@ -28,6 +28,7 @@ const FavouriteItems = ({ listState, userState }) => {
             key={item.id}
             onAdd={handleAdd}
             onDelete={handleDelete}
+            showAdd={listState[0].id}
           />
         )}
       />

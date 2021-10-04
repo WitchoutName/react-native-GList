@@ -10,6 +10,7 @@ import LogoutIcon from "./Components/LogoutIcon";
 import BackArrowIcon from "./Components/BackArrowIcon";
 import SearchIcon from "./Components/SearchIcon";
 import TickIcon from "./Components/TickIcon";
+import GoogleIcon from "./Components/GoogleIcon";
 
 function Icon(props) {
   const icons = {
@@ -85,6 +86,13 @@ function Icon(props) {
     ),
     tick: (
       <TickIcon
+        width={props.width ? props.width : 20}
+        height={props.height ? props.height : 20}
+        color={props.color}
+      />
+    ),
+    google: (
+      <GoogleIcon
         width={props.width ? props.width : 20}
         height={props.height ? props.height : 20}
         color={props.color}

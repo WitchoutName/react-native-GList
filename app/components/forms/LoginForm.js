@@ -1,27 +1,43 @@
 import React, { useState } from "react";
-import { View, StyleSheet, Button } from "react-native";
+import { View, StyleSheet, Text, TouchableOpacity } from "react-native";
 import * as Yup from "yup";
+import * as Google from "expo-google-app-auth";
 
 import SmallLink from "../common/SmallLink";
 import { ErrorMessage } from "../common/forms";
 import { AppForm, AppFormField, SubmitButton } from "../common/forms";
 import auth from "../../services/authService";
+import Icon from "../../assets/Icons/Icon";
 
 const validationSchema = Yup.object().shape({
   email: Yup.string().required().email().label("Email"),
   password: Yup.string().required().min(4).label("Password"),
 });
 
-const LoginForm = ({ scrollToIndex, onAuth }) => {
+const LoginForm = ({ scrollToIndex, onAuth, setLoading }) => {
   const [error, setError] = useState("");
 
   const handleOnSubmit = async (values) => {
+    setLoading(true);
     const { data, status } = await auth.login(values.email, values.password);
-    console.log(status);
+    setLoading(false);
     if (status === 404) setError("No account with this email.");
     else if (status === 400) setError(data);
     else if (status >= 500) setError("Server error.");
     else onAuth();
+  };
+
+  const googleLogin = async () => {
+    setLoading(true);
+    const { accessToken } = await Google.logInAsync({
+      androidClientId: `1087978326575-00ndbnrf2noe5q7p09i8g56s3qv2ibqo.apps.googleusercontent.com`,
+    });
+    if (accessToken)
+      auth.loginWithGoogle(accessToken).then((r) => {
+        setLoading(false);
+        onAuth();
+      });
+    else setLoading(false);
   };
 
   return (
@@ -48,6 +64,7 @@ const LoginForm = ({ scrollToIndex, onAuth }) => {
           name="password"
         />
         <SubmitButton title="Login" />
+
         <ErrorMessage error={error} visible={error} />
       </AppForm>
       <View style={styles.links}>
@@ -56,7 +73,14 @@ const LoginForm = ({ scrollToIndex, onAuth }) => {
           Forgot your password?
         </SmallLink>
       </View>
-      <View style={styles.google}></View>
+      <TouchableOpacity
+        activeOpacity={0.8}
+        style={styles.google}
+        onPress={googleLogin}
+      >
+        <Icon name="google" height={46} width={46} />
+        <Text style={styles.googleText}>Sign in with Google</Text>
+      </TouchableOpacity>
     </View>
   );
 };
@@ -79,11 +103,17 @@ const styles = StyleSheet.create({
     top: -5,
   },
   google: {
-    height: 35,
-    backgroundColor: "blue",
-    width: "60%",
-
-    bottom: 0,
+    paddingRight: 8,
+    backgroundColor: "white",
+    fontFamily: "Roboto-Medium",
+    flexDirection: "row",
+    alignItems: "center",
+    borderRadius: 3,
+    elevation: 3,
+  },
+  googleText: {
+    fontSize: 17,
+    marginHorizontal: 10,
   },
 });
 

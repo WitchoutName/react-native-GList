@@ -21,7 +21,6 @@ export default (props) => {
 
   useEffect(() => {
     auth.getAuthToken().then((r) => {
-      console.log(!!r);
       if (r) setInitIndex(1);
       setAuthCheck(true);
     });

@@ -14,7 +14,9 @@ const Navbar = ({ list, onOpenDrawer, onOpenDrawerRight }) => {
         <IconButton
           icon={{ name: "hamburger", height: 75, width: 75 }}
           style={styles.tab}
-          onPress={onOpenDrawer}
+          onPress={() => {
+            onOpenDrawer();
+          }}
         />
         <View style={{ alignItems: "center" }}>
           <AppText style={styles.title}>{list.title}</AppText>

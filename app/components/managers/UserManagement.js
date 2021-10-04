@@ -33,11 +33,13 @@ const UserManagement = ({ userState, onLogout, setInput }) => {
         <Image style={styles.profile} source={{ uri: getUserImage(user) }} />
         <AppText>{getUserName(user)}</AppText>
       </View>
-      <IconButton
-        style={styles.logout}
-        icon={{ name: "edit", height: 50, width: 50 }}
-        onPress={handleUserEdit}
-      />
+      {!user.google_login && (
+        <IconButton
+          style={styles.logout}
+          icon={{ name: "edit", height: 50, width: 50 }}
+          onPress={handleUserEdit}
+        />
+      )}
       <IconButton
         style={styles.logout}
         icon={{ name: "logout", height: 50, width: 50 }}

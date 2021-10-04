@@ -14,7 +14,7 @@ const validationSchema = Yup.object().shape({
   password2: Yup.string().required().min(4).label("Password"),
 });
 
-const RegisterForm = ({ scrollToIndex, onAuth }) => {
+const RegisterForm = ({ scrollToIndex, onAuth, setLoading }) => {
   const [error, setError] = useState("");
 
   const handleOnSubmit = async (values) => {
@@ -23,8 +23,9 @@ const RegisterForm = ({ scrollToIndex, onAuth }) => {
       username: values.username,
       password: values.password1,
     };
+    setLoading(true);
     const { data, status } = await auth.register(user);
-    console.log(data, status);
+    setLoading(false);
     if (data.token) onAuth();
     else setError(data[Object.keys(data)[0]][0]);
   };

@@ -22,9 +22,7 @@ export async function login(email, password) {
     password,
   });
   if (response.status >= 200 && response.status < 300) {
-    console.log("storing token");
     await setAuthToken(response.data.token);
-
     return response;
   }
   return response;
@@ -34,8 +32,9 @@ export function loginWithAuthToken(token) {
   setAuthToken(token);
 }
 
-export function logout() {
-  setAuthToken("");
+export async function logout() {
+  const response = await setAuthToken("");
+  return response;
 }
 
 async function setAuthToken(authToken) {
@@ -74,6 +73,41 @@ export async function getAuthToken() {
   }
 }
 
+export async function loginWithGoogle(accessToken) {
+  const response = await api.client.post(authUrl + "google-login/", {
+    access_token: accessToken,
+  });
+  if (response.status >= 200 && response.status < 300) {
+    await setAuthToken(response.data.token);
+    return response;
+  }
+  return response;
+}
+
+export async function requestCodeToEmail(email) {
+  const response = await api.client.post(authUrl + "change-password/0/", {
+    email,
+  });
+
+  return response;
+}
+export async function codeValidation(code) {
+  const response = await api.client.post(authUrl + "change-password/1/", {
+    code,
+  });
+
+  return response;
+}
+
+export async function changePassword(password, code) {
+  const response = await api.client.post(authUrl + "change-password/2/", {
+    password,
+    code,
+  });
+
+  return response;
+}
+
 export default {
   login,
   loginWithAuthToken,
@@ -82,4 +116,8 @@ export default {
   putUser,
   getAuthToken,
   register,
+  loginWithGoogle,
+  requestCodeToEmail,
+  codeValidation,
+  changePassword,
 };

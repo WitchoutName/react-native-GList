@@ -57,7 +57,7 @@ function BottomInput({ visible, onClose, content, onSubmit, children }) {
             enableReinitialize
             validationSchema={validationSchema}
           >
-            {({ handleSubmit, errors, values, setFieldValue, resetForm }) => (
+            {({ handleSubmit, errors, values, setFieldValue }) => (
               <View style={styles.form}>
                 <TextInput
                   style={styles.title}

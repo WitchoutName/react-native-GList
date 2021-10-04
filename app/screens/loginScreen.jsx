@@ -1,31 +1,35 @@
 import React, { useState, useEffect, useRef } from "react";
 import { View, StyleSheet, ScrollView, Button, Dimensions } from "react-native";
 
+import api from "../services/api";
 import Screen from "../components/common/Screen";
 import LoginForm from "../components/forms/LoginForm";
 import RegisterForm from "../components/forms/RegisterForm";
 import ForgottenPasswordForm from "../components/forms/ForgottenPasswordForm";
+import PasswordRestoreCodeForm from "../components/forms/PasswordRestoreCodeForm";
 import LogoForm from "../components/forms/LogoForm";
 import ScreenScroll from "../components/common/ScreenScroll";
+import Loader from "../components/Loader";
+import Changepasswordform from "./../components/forms/ChangePasswordForm";
 
 const LoginScreen = ({ scrollToIndex }) => {
+  const [loaging, setLoading] = useState(false);
+  const [passwordCode, setPasswordCode] = useState(null);
+
   const handleAuth = () => {
-    scrollToIndex(1);
+    api.list.setActiveList("").then(() => scrollToIndex(1));
   };
 
   return (
     <Screen>
-      {/* <Button
-        style={{ position: "absolute", top: 0 }}
-        title="to list"
-        onPress={() => scrollToIndex(1)}
-      /> */}
       <LogoForm>
         <ScreenScroll
           pages={[
-            [RegisterForm, { onAuth: handleAuth }],
-            [LoginForm, { onAuth: handleAuth }],
-            [ForgottenPasswordForm, {}],
+            [RegisterForm, { onAuth: handleAuth, setLoading }],
+            [LoginForm, { onAuth: handleAuth, setLoading }],
+            [ForgottenPasswordForm, { setLoading }],
+            [PasswordRestoreCodeForm, { setPasswordCode, setLoading }],
+            [Changepasswordform, { code: passwordCode, setLoading }],
           ]}
           initIndex={1}
           horizontal={true}
@@ -34,6 +38,7 @@ const LoginScreen = ({ scrollToIndex }) => {
           debug={false}
         />
       </LogoForm>
+      <Loader visible={loaging} duration={250} />
     </Screen>
   );
 };

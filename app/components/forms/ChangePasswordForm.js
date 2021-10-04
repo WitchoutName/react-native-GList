@@ -6,36 +6,48 @@ import api from "../../services/api";
 import SmallLink from "../common/SmallLink";
 import { AppForm, AppFormField, SubmitButton } from "../common/forms";
 
-const emailValidationSchema = Yup.object().shape({
-  email: Yup.string().required().email().label("Email"),
+const validationSchema = Yup.object().shape({
+  password: Yup.string().label("Password"),
+  password2: Yup.string().label("Password"),
 });
 
-const ForgottenPasswordFrom = ({ scrollToIndex, setLoading }) => {
+const Changepasswordform = ({ scrollToIndex, code, setLoading }) => {
   const handleOnSubmit = async (values, { setFieldError }) => {
     setLoading(true);
-    const { data, status } = await api.auth.requestCodeToEmail(values.email);
+    const { data, status } = await api.auth.changePassword(
+      values.password,
+      code
+    );
     setLoading(false);
-    if (status >= 500) setFieldError("email", "Server error.");
-    else if (status == 404) setFieldError("email", "Invalid email.");
-    else scrollToIndex(3);
+    if (status >= 500) setFieldError("password", "Server error.");
+    else if (status == 404) setFieldError("password", "Invalid password.");
+    else if (status == 400) setFieldError("password", data["error"]);
+    else scrollToIndex(1);
   };
 
   return (
     <View style={styles.form}>
       <AppForm
-        initialValues={{ email: "" }}
+        initialValues={{ password: "" }}
         onSubmit={handleOnSubmit}
-        validationSchema={emailValidationSchema}
+        validationSchema={validationSchema}
         style={styles.form}
       >
         <AppFormField
-          placeholder="Email"
+          placeholder="New password"
           autoCapitalize="none"
           autoCorrect={false}
-          textContentType="emailAddress"
-          name="email"
+          name="password"
+          secureTextEntry
         />
-        <SubmitButton title="Send me code" />
+        <AppFormField
+          placeholder="New password (again)"
+          autoCapitalize="none"
+          autoCorrect={false}
+          name="password2"
+          secureTextEntry
+        />
+        <SubmitButton title="Change password" />
         <SmallLink onPress={() => scrollToIndex(1)}>
           I know my password
         </SmallLink>
@@ -63,4 +75,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ForgottenPasswordFrom;
+export default Changepasswordform;

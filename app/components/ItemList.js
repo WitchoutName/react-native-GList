@@ -11,7 +11,7 @@ import BottomInput from "./BottomInput";
 
 const screenWidth = Dimensions.get("window").width;
 
-const ItemList = ({ listState, userState }) => {
+const ItemList = ({ listState, userState, ads }) => {
   const [list, setList] = listState;
   const [user, setUser] = userState;
   const flatList = useRef();
@@ -117,9 +117,10 @@ const ItemList = ({ listState, userState }) => {
             keyExtractor={(i) => i.id.toString()}
             refreshing={refreshing}
             onRefresh={() => {
-              api.list.getList(list.id).then(({ data: l }) => {
-                setList(l);
-              });
+              list.id &&
+                api.list.getList(list.id).then(({ data: l }) => {
+                  setList(l);
+                });
             }}
           />
         </VirtualizedList>
@@ -130,15 +131,15 @@ const ItemList = ({ listState, userState }) => {
         />
         <OpacityCircleButton
           isVisible={!inputVisible && deleteVisible}
-          style={{ position: "absolute", bottom: 30, left: 10 }}
+          style={{ position: "absolute", bottom: ads ? 10 : 30, left: 10 }}
           icon={{ name: "delete", width: 53, height: 53 }}
           onPress={handlePressDelete}
         />
         <OpacityCircleButton
-          isVisible={!inputVisible}
+          isVisible={!inputVisible && list.id}
           style={{
             position: "absolute",
-            bottom: 30,
+            bottom: ads ? 10 : 30,
             right: 10,
           }}
           icon={{ name: "plus", height: 50, width: 50 }}
