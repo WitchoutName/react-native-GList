@@ -1,5 +1,6 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import api from "./httpService";
+import * as Crypto from "expo-crypto";
 
 const authUrl = "auth/";
 const tokenKey = "token";
@@ -8,8 +9,19 @@ getAuthToken().then((t) => {
   api.setAuthToken(t);
 });
 
+async function passwordToHash(password, user) {
+  const hash = await Crypto.digestStringAsync(
+    Crypto.CryptoDigestAlgorithm.SHA256,
+    password || user.password
+  );
+  return password ? hash : { ...user, password: hash };
+}
+
 export async function register(user) {
-  const response = await api.client.put(authUrl + "get-token/", user);
+  const response = await api.client.put(
+    authUrl + "get-token/",
+    await passwordToHash(null, user)
+  );
   if (response.status >= 200 && response.status < 300) {
     await setAuthToken(response.data.token);
   }
@@ -19,8 +31,9 @@ export async function register(user) {
 export async function login(email, password) {
   const response = await api.client.post(authUrl + "get-token/", {
     email,
-    password,
+    password: await passwordToHash(password),
   });
+  console.log(response);
   if (response.status >= 200 && response.status < 300) {
     await setAuthToken(response.data.token);
     return response;
@@ -48,8 +61,9 @@ async function setAuthToken(authToken) {
 
 export async function getUser() {
   try {
-    const { data } = await api.client.post(authUrl + "get-user/");
-    return data;
+    const response = await api.client.post(authUrl + "get-user/");
+    console.log(response);
+    return response.data;
   } catch (error) {
     return null;
   }
@@ -101,7 +115,7 @@ export async function codeValidation(code) {
 
 export async function changePassword(password, code) {
   const response = await api.client.post(authUrl + "change-password/2/", {
-    password,
+    password: await passwordToHash(password),
     code,
   });
 

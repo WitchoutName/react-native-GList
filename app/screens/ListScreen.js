@@ -30,7 +30,7 @@ const ListScreen = ({ scrollToIndex }) => {
   const [drawerRightVisible, setDrawerRightVisible] = useState(false);
   const [drawerRightContent, setDrawerRightContent] = useState(false);
   const [loaging, setLoading] = useState(false);
-  const [ads, setAds] = useState(true);
+  const [ads, setAds] = useState(false);
 
   const handleLogout = () => {
     api.auth.logout().then(() => {
