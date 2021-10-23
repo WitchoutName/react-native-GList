@@ -1,13 +1,12 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { View, StyleSheet, Text, TouchableOpacity } from "react-native";
 import * as Yup from "yup";
-import * as Google from "expo-google-app-auth";
 
 import SmallLink from "../common/SmallLink";
 import { ErrorMessage } from "../common/forms";
 import { AppForm, AppFormField, SubmitButton } from "../common/forms";
 import auth from "../../services/authService";
-import Icon from "../../assets/Icons/Icon";
+import GoogleLogin from "./GoogleLogin";
 
 const validationSchema = Yup.object().shape({
   email: Yup.string().required().email().label("Email"),
@@ -27,17 +26,13 @@ const LoginForm = ({ scrollToIndex, onAuth, setLoading }) => {
     else onAuth();
   };
 
-  const googleLogin = async () => {
-    setLoading(true);
-    const { accessToken } = await Google.logInAsync({
-      androidClientId: `1087978326575-00ndbnrf2noe5q7p09i8g56s3qv2ibqo.apps.googleusercontent.com`,
-    });
-    if (accessToken)
-      auth.loginWithGoogle(accessToken).then((r) => {
+  const handleGoogleAuth = (googleAuth) => {
+    if (googleAuth && googleAuth.accessToken)
+      auth.loginWithGoogle(googleAuth.accessToken).then((r) => {
         setLoading(false);
         onAuth();
       });
-    else setLoading(false);
+    setLoading(false);
   };
 
   return (
@@ -73,14 +68,11 @@ const LoginForm = ({ scrollToIndex, onAuth, setLoading }) => {
           Forgot your password?
         </SmallLink>
       </View>
-      <TouchableOpacity
-        activeOpacity={0.8}
-        style={styles.google}
-        onPress={googleLogin}
-      >
-        <Icon name="google" height={46} width={46} />
-        <Text style={styles.googleText}>Sign in with Google</Text>
-      </TouchableOpacity>
+      <GoogleLogin
+        setError={setError}
+        setLoading={setLoading}
+        onGoogleAuth={handleGoogleAuth}
+      />
     </View>
   );
 };
@@ -101,19 +93,6 @@ const styles = StyleSheet.create({
     marginHorizontal: 5,
     marginBottom: 30,
     top: -5,
-  },
-  google: {
-    paddingRight: 8,
-    backgroundColor: "white",
-    fontFamily: "Roboto-Medium",
-    flexDirection: "row",
-    alignItems: "center",
-    borderRadius: 3,
-    elevation: 3,
-  },
-  googleText: {
-    fontSize: 17,
-    marginHorizontal: 10,
   },
 });
 

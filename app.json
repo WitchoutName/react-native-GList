@@ -2,7 +2,8 @@
   "expo": {
     "name": "GList",
     "slug": "GList",
-    "version": "1.0.0",
+    "scheme": "com.dualpill.glist",
+    "version": "1.0.9",
     "orientation": "portrait",
     "icon": "./app/assets/images/logo-bg.png",
     "splash": {
@@ -13,23 +14,25 @@
     "updates": {
       "fallbackToCacheTimeout": 0
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.dualpill.glist"
     },
     "android": {
       "package": "com.dualpill.glist",
-      "versionCode": 1,
+      "versionCode": 2,
       "adaptiveIcon": {
         "foregroundImage": "./app/assets/images/logo-bg.png",
         "backgroundColor": "#FFFFFF"
       },
       "config": {
-        "googleMobileAdsAppId": "ca-app-pub-5488365505117873~9039066518"
-      }
+        "googleMobileAdsAppId": "ca-app-pub-5488365505117873~9039066518",
+        "googleSignIn": {
+          "certificateHash": "83:8C:23:61:8A:5C:BC:9F:B9:FD:C6:76:6D:E6:EC:08:DF:8C:C7:45"
+        }
+      },
+      "permissions": []
     },
     "web": {
       "favicon": "./app/assets/images/logo-bg.png"

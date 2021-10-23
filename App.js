@@ -9,6 +9,8 @@ import ScreenScroll from "./app/components/common/ScreenScroll";
 import LoginScreen from "./app/screens/loginScreen";
 import ListScreen from "./app/screens/ListScreen";
 import auth from "./app/services/authService";
+import Screen from "./app/components/common/Screen";
+import GoogleLogin from "./app/components/forms/GoogleLogin";
 
 export default (props) => {
   let [fontsLoaded] = useFonts({
