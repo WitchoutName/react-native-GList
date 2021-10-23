@@ -11,7 +11,7 @@ import BottomInput from "./BottomInput";
 
 const screenWidth = Dimensions.get("window").width;
 
-const ItemList = ({ listState, userState, ads }) => {
+const ItemList = ({ listState, userState, ads, addStateToOnBack }) => {
   const [list, setList] = listState;
   const [user, setUser] = userState;
   const flatList = useRef();
@@ -50,8 +50,6 @@ const ItemList = ({ listState, userState, ads }) => {
     }, 2000);
 
     tools.item.addItem(title, userState, "user");
-
-    // TODO: Add item to user fav
   };
 
   function handlePressPlus() {
@@ -85,6 +83,10 @@ const ItemList = ({ listState, userState, ads }) => {
     if (deleteVisible && checkedByMe.length === 0) setDeleteVisible(false);
     else if (!deleteVisible && checkedByMe.length > 0) setDeleteVisible(true);
   }, [list]);
+
+  useEffect(() => {
+    addStateToOnBack([inputVisible, setInputVisible]);
+  }, []);
 
   return (
     <View style={[styles.scrollBox]}>

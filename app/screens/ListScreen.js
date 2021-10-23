@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { View, StyleSheet } from "react-native";
 import { AdMobBanner } from "expo-ads-admob";
+import { useBackHandler } from "@react-native-community/hooks";
 
 import api from "../services/api";
 import Loader from "../components/Loader";
@@ -29,7 +30,8 @@ const ListScreen = ({ scrollToIndex }) => {
   const [drawerAnimationHidden, setDrawerAnimationHidden] = useState(true);
   const [drawerRightVisible, setDrawerRightVisible] = useState(false);
   const [drawerRightContent, setDrawerRightContent] = useState(false);
-  const [loaging, setLoading] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [statesToToggleOnBack, setStatesToToggleOnBack] = useState([]);
   const [ads, setAds] = useState(false);
 
   const handleLogout = () => {
@@ -38,6 +40,24 @@ const ListScreen = ({ scrollToIndex }) => {
       scrollToIndex(0);
     });
   };
+
+  useBackHandler(() => {
+    console.log(statesToToggleOnBack[0][0]);
+    for (let [state, setState] of [
+      [loading, setLoading],
+      [modalVisible, setModalVisible],
+      [inputVisible, setInputVisible],
+      [drawerVisible, setDrawerVisible],
+      [drawerRightVisible, setDrawerRightVisible],
+      ...statesToToggleOnBack,
+    ]) {
+      if (state) {
+        setState(false);
+        return true;
+      }
+    }
+    return false;
+  });
 
   useEffect(() => {
     api.list.getLists().then(({ data: rLists }) => {
@@ -128,11 +148,14 @@ const ListScreen = ({ scrollToIndex }) => {
               listState={[list, setList]}
               ads={ads}
               userState={[user, setUser]}
+              addStateToOnBack={(s) => {
+                setStatesToToggleOnBack([...statesToToggleOnBack, s]);
+              }}
             />
           </SideMenu>
         </SideMenu>
       </SideMenu>
-      <Loader visible={loaging} duration={250} />
+      <Loader visible={loading} duration={250} />
       {ads && (
         <View style={{ marginBottom: 24 }}>
           <AdMobBanner

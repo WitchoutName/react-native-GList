@@ -14,6 +14,7 @@ const DataManagement = ({
   setModal,
   setInput,
   onLogout,
+  setLoading,
 }) => {
   const [list, setList] = listState;
   const [lists, setLists] = listsState;
@@ -67,11 +68,13 @@ const DataManagement = ({
             hidePanel={() => setDrawerVisible(false)}
             onAdminList={handleAdminList}
             onActivateList={handleActivateList}
+            setLoading={setLoading}
           />
           <UserManagement
             userState={userState}
             onLogout={onLogout}
             setInput={setInput}
+            setLoading={setLoading}
           />
         </>
       ) : (
@@ -81,6 +84,7 @@ const DataManagement = ({
           setModal={setModal}
           setInput={setInput}
           userId={user.id}
+          setLoading={setLoading}
         />
       )}
     </View>

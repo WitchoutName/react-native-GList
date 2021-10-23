@@ -7,7 +7,7 @@ import { getUserImage, getUserName } from "../../services/userService";
 import IconButton from "../common/IconButton";
 import AppText from "../common/AppText";
 
-const UserManagement = ({ userState, onLogout, setInput }) => {
+const UserManagement = ({ userState, onLogout, setInput, setLoading }) => {
   const [user, setUser] = userState;
   const [setInputVisible, setInputContent] = setInput;
 
@@ -17,6 +17,7 @@ const UserManagement = ({ userState, onLogout, setInput }) => {
         user={user}
         onClose={() => setInputVisible(false)}
         onPutUser={handlePutUser}
+        setLoading={setLoading}
       />
     );
     setInputVisible(true);

@@ -20,6 +20,7 @@ const ListManagament = ({
   setInput,
   onAdminList,
   onActivateList,
+  setLoading,
 }) => {
   const [itemHeight, setItemHeight] = useState(0);
   const [lists, setLists] = listsState;
@@ -32,14 +33,22 @@ const ListManagament = ({
 
   const handleInitCreateList = () => {
     setInputContent(
-      <CreateListForm onClose={handleInputClose} onCreateList={handleAddList} />
+      <CreateListForm
+        onClose={handleInputClose}
+        onCreateList={handleAddList}
+        setLoading={setLoading}
+      />
     );
     setInputVisible(true);
   };
 
   const handleInitJoinList = () => {
     setInputContent(
-      <JoinListForm onClose={handleInputClose} onJoinList={handleAddList} />
+      <JoinListForm
+        onClose={handleInputClose}
+        onJoinList={handleAddList}
+        setLoading={setLoading}
+      />
     );
     setInputVisible(true);
   };

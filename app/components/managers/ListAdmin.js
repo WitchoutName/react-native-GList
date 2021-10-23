@@ -7,7 +7,14 @@ import MemberManagement from "./MemberManagement";
 import IconButton from "../common/IconButton";
 import EditListForm from "../forms/EditListForm";
 
-const ListAdmin = ({ listState, listsState, setModal, setInput, userId }) => {
+const ListAdmin = ({
+  listState,
+  listsState,
+  setModal,
+  setInput,
+  userId,
+  setLoading,
+}) => {
   const [list, setList] = listState;
   const [lists, setLists] = listsState;
   const [setInputVisible, setInputContent] = setInput;
@@ -18,6 +25,7 @@ const ListAdmin = ({ listState, listsState, setModal, setInput, userId }) => {
         list={list}
         onClose={setInputVisible(false)}
         onEditList={handleEditList}
+        setLoading={setLoading}
       />
     );
     setInputVisible(true);

@@ -12,15 +12,17 @@ const validationSchema = Yup.object().shape({
   username: Yup.string().required().label("Name"),
 });
 
-const EditUserForm = ({ user, onClose, onPutUser }) => {
+const EditUserForm = ({ user, onClose, onPutUser, setLoading }) => {
   const [error, setError] = useState("");
   const [name, setName] = useState(user.username);
 
   const handleOnSubmit = async (values) => {
+    setLoading(true);
     const { data, status } = await auth.putUser({ ...values });
     if (status === 400) setError(data.username);
     else if (status >= 500) setError("Server error.");
     else onPutUser(data);
+    setLoading(false);
   };
 
   return (

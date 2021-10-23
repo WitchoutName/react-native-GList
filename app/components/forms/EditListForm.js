@@ -13,14 +13,16 @@ const validationSchema = Yup.object().shape({
   title: Yup.string().required().label("Title"),
 });
 
-const EditListForm = ({ list, onClose, onEditList }) => {
+const EditListForm = ({ list, onClose, onEditList, setLoading }) => {
   const [error, setError] = useState("");
 
   const handleOnSubmit = async (values) => {
+    setLoading(true);
     const { data, status } = await api.list.putList({ ...list, ...values });
     if (status === 400) setError(data.title);
     else if (status >= 500) setError("Server error.");
     else onEditList(data);
+    setLoading(false);
   };
 
   return (

@@ -13,15 +13,17 @@ const validationSchema = Yup.object().shape({
   code: Yup.string().required().label("Code"),
 });
 
-const JoinListForm = ({ onClose, onJoinList }) => {
+const JoinListForm = ({ onClose, onJoinList, setLoading }) => {
   const [error, setError] = useState("");
 
   const handleOnSubmit = async (values) => {
+    setLoading(true);
     const { data, status } = await api.list.joinList(values.code.toUpperCase());
     if (status === 400) setError(data.token);
     else if (status >= 404) setError("Invalid code.");
     else if (status >= 500) setError("Server error.");
     else onJoinList(data);
+    setLoading(false);
   };
 
   return (

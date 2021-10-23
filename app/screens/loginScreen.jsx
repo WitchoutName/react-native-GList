@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { View, StyleSheet, ScrollView, Button, Dimensions } from "react-native";
+import { useBackHandler } from "@react-native-community/hooks";
 
 import api from "../services/api";
 import Screen from "../components/common/Screen";
@@ -13,12 +13,20 @@ import Loader from "../components/Loader";
 import Changepasswordform from "./../components/forms/ChangePasswordForm";
 
 const LoginScreen = ({ scrollToIndex }) => {
-  const [loaging, setLoading] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [passwordCode, setPasswordCode] = useState(null);
 
   const handleAuth = () => {
     api.list.setActiveList("").then(() => scrollToIndex(1));
   };
+
+  useBackHandler(() => {
+    if (loading) {
+      setLoading(false);
+      return true;
+    }
+    return false;
+  });
 
   return (
     <Screen>
@@ -38,7 +46,7 @@ const LoginScreen = ({ scrollToIndex }) => {
           debug={false}
         />
       </LogoForm>
-      <Loader visible={loaging} duration={250} />
+      <Loader visible={loading} duration={250} />
     </Screen>
   );
 };
