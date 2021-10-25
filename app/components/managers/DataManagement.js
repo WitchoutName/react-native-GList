@@ -24,10 +24,17 @@ const DataManagement = ({
   const [setDrawerVisible, setDrawerDeleteOnHide, drawerAnimationHidden] =
     drawerControls;
 
-  const handleActivateList = (id, notHide) => {
+  const handleActivateList = async (id, notHide) => {
     if (id !== list.id) {
+      const cached = await api.cache.getDetailedList(id);
+      // console.log("c: ");
+      if (cached) {
+        setList(cached);
+        if (!notHide) setDrawerVisible(false);
+      }
       api.list.getList(id).then(({ data: l }) => {
         setList(l);
+        // console.log("n: ");
         api.list.setActiveList(id);
         if (!notHide) setDrawerVisible(false);
       });

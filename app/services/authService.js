@@ -33,7 +33,7 @@ export async function login(email, password) {
     email,
     password: await passwordToHash(password),
   });
-  console.log(response);
+  //console.log(response);
   if (response.status >= 200 && response.status < 300) {
     await setAuthToken(response.data.token);
     return response;
@@ -62,7 +62,7 @@ async function setAuthToken(authToken) {
 export async function getUser() {
   try {
     const response = await api.client.post(authUrl + "get-user/");
-    console.log(response);
+    //console.log(response);
     return response.data;
   } catch (error) {
     return null;

@@ -72,7 +72,9 @@ const ListManagament = ({
 
   const leaveList = (listId) => {
     setLists(lists.filter((l) => l.id !== listId));
-    api.list.leaveList(listId).then((r) => console.log(r));
+    api.list.leaveList(listId).then((r) => {
+      /*console.log(r)*/
+    });
     setModalVisible(false);
   };
 
@@ -90,7 +92,9 @@ const ListManagament = ({
 
   const deleteList = (listId) => {
     setLists(lists.filter((l) => l.id !== listId));
-    api.list.deleteList(listId).then((r) => console.log(r));
+    api.list.deleteList(listId).then((r) => {
+      /*console.log(r)*/
+    });
     setModalVisible(false);
   };
 

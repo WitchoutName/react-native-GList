@@ -88,6 +88,18 @@ const ItemList = ({ listState, userState, ads, addStateToOnBack }) => {
     addStateToOnBack([inputVisible, setInputVisible]);
   }, []);
 
+  const renderItem = ({ item, index }) => (
+    <GlistItem
+      item={item}
+      index={index}
+      checkedBy={list.members.filter((m) => m.id === item.checked_by)[0]}
+      userId={user.id}
+      onCheck={handleCheck}
+      onEdit={handleEdit}
+      onLike={handleLike}
+    />
+  );
+
   return (
     <View style={[styles.scrollBox]}>
       <BottomInput
@@ -103,19 +115,11 @@ const ItemList = ({ listState, userState, ads, addStateToOnBack }) => {
             contentContainerStyle={{ paddingVertical: 10 }}
             key={"0"}
             data={list.item_set}
-            renderItem={({ item, index }) => (
-              <GlistItem
-                item={item}
-                index={index}
-                checkedBy={
-                  list.members.filter((m) => m.id === item.checked_by)[0]
-                }
-                userId={user.id}
-                onCheck={handleCheck}
-                onEdit={handleEdit}
-                onLike={handleLike}
-              />
-            )}
+            renderItem={renderItem}
+            initialNumToRender={10}
+            maxToRenderPerBatch={10}
+            removeClippedSubviews={true}
+            windowSize={10}
             keyExtractor={(i) => i.id.toString()}
             refreshing={refreshing}
             onRefresh={() => {

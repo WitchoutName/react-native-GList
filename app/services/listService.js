@@ -1,5 +1,6 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import api from "./httpService";
+import cache from "./cacheService";
 
 const gListUrl = "api/user/glist/";
 const listKey = "activeList";
@@ -27,6 +28,7 @@ export async function getLists() {
 
 export async function getList(id) {
   const response = await api.client.get(`${gListUrl}${id}/`);
+  if (response.ok) cache.setList({ ...response.data });
   return response;
 }
 

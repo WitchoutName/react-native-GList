@@ -42,7 +42,7 @@ const ListScreen = ({ scrollToIndex }) => {
   };
 
   useBackHandler(() => {
-    console.log(statesToToggleOnBack[0][0]);
+    //console.log(statesToToggleOnBack[0][0]);
     for (let [state, setState] of [
       [loading, setLoading],
       [modalVisible, setModalVisible],
@@ -62,6 +62,7 @@ const ListScreen = ({ scrollToIndex }) => {
   useEffect(() => {
     api.list.getLists().then(({ data: rLists }) => {
       setLists(rLists.sort((a, b) => a.title.localeCompare(b.title)));
+      //console.log(rLists);
       let listToLoad = null;
       api.list.getActiveList().then((newId) => {
         if (newId) {
@@ -76,14 +77,31 @@ const ListScreen = ({ scrollToIndex }) => {
           listToLoad = rLists[0].id;
           api.list.setActiveList(listToLoad);
         }
-        if (listToLoad)
-          api.list.getList(listToLoad).then(({ data: l }) => setList(l));
+        console.log(listToLoad);
+        if (listToLoad) {
+          const cached = api.cache.getDetailedList(listToLoad);
+          if (cached) {
+            // console.log("cached: ", cached);
+            setList(cached);
+            console.log("loaded cached");
+          }
+
+          api.list.getList(listToLoad).then(({ data: l }) => {
+            setList(l);
+            // console.log("api list: ", l);
+            console.log("loaded from api");
+          });
+        }
       });
     });
     api.auth.getUser().then((u) => {
       setUser(u);
     });
   }, []);
+
+  // useEffect(() => {
+  //   console.log("list changed: ", list);
+  // }, [list]);
 
   return (
     <Screen>
