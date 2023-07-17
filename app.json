@@ -27,9 +27,9 @@
         "backgroundColor": "#FFFFFF"
       },
       "config": {
-        "googleMobileAdsAppId": "ca-app-pub-5488365505117873~9039066518",
+        "googleMobileAdsAppId": "",
         "googleSignIn": {
-          "certificateHash": "83:8C:23:61:8A:5C:BC:9F:B9:FD:C6:76:6D:E6:EC:08:DF:8C:C7:45"
+          "certificateHash": ""
         }
       },
       "permissions": []
